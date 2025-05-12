@@ -1,0 +1,2910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indian Army Recruitment Portal</title>
+  
+  <!-- Dependencies -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+  
+  <style id="app-style">
+    :root {
+      --primary-color: #1a4d2e;
+      --secondary-color: #ff9933;
+      --accent-color: #138808;
+      --light-bg: #f9f9f9;
+      --dark-bg: #333333;
+      --text-color: #333333;
+      --text-light: #ffffff;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--light-bg);
+      color: var(--text-color);
+    }
+    
+    .rtl {
+      direction: rtl;
+      text-align: right;
+    }
+    
+    .navbar {
+      background-color: var(--primary-color);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .logo-text {
+      color: white;
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--secondary-color);
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link.active::after,
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .hero-section {
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.pixabay.com/photo/2018/02/11/19/09/indian-army-3146171_1280.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: white;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    }
+    
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .section-card {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .section-header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 15px 20px;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+    
+    .form-input {
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .form-input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(26, 77, 46, 0.2);
+    }
+    
+    .error-message {
+      color: #e53e3e;
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background-color: #103b21;
+    }
+    
+    .btn-secondary {
+      background-color: var(--secondary-color);
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #e68a2e;
+    }
+    
+    .footer {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    /* Language Slider */
+    .language-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 30px;
+    }
+    
+    .language-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .language-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    
+    .language-slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .language-slider {
+      background-color: var(--accent-color);
+    }
+    
+    input:focus + .language-slider {
+      box-shadow: 0 0 1px var(--accent-color);
+    }
+    
+    input:checked + .language-slider:before {
+      transform: translateX(30px);
+    }
+    
+    .lang-label {
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0 5px;
+      font-weight: 500;
+    }
+    
+    .hidden-section {
+      display: none;
+    }
+    
+    /* Loading animation */
+    .loader {
+      border: 3px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 3px solid var(--primary-color);
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Font size controls */
+    .font-size-controls button {
+      background-color: transparent;
+      border: 1px solid white;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 4px;
+      margin: 0 2px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .font-size-controls button:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Progress bar */
+    .progress-container {
+      width: 100%;
+      background-color: #e0e0e0;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+    
+    .progress-bar {
+      height: 10px;
+      background-color: var(--accent-color);
+      border-radius: 5px;
+      transition: width 0.3s ease;
+    }
+    
+    /* Document upload styles */
+    .upload-area {
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      transition: border-color 0.3s;
+      cursor: pointer;
+    }
+    
+    .upload-area:hover {
+      border-color: var(--primary-color);
+    }
+    
+    /* Timeline for exam schedule */
+    .timeline {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .timeline::after {
+      content: '';
+      position: absolute;
+      width: 6px;
+      background-color: var(--primary-color);
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      margin-left: -3px;
+    }
+    
+    .timeline-item {
+      padding: 10px 40px;
+      position: relative;
+      background-color: inherit;
+      width: 50%;
+    }
+    
+    .timeline-item::after {
+      content: '';
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      right: -12px;
+      background-color: white;
+      border: 4px solid var(--accent-color);
+      top: 15px;
+      border-radius: 50%;
+      z-index: 1;
+    }
+    
+    .left {
+      left: 0;
+    }
+    
+    .right {
+      left: 50%;
+    }
+    
+    .left::before {
+      content: " ";
+      height: 0;
+      position: absolute;
+      top: 22px;
+      width: 0;
+      z-index: 1;
+      right: 30px;
+      border: medium solid var(--light-bg);
+      border-width: 10px 0 10px 10px;
+      border-color: transparent transparent transparent var(--light-bg);
+    }
+    
+    .right::before {
+      content: " ";
+      height: 0;
+      position: absolute;
+      top: 22px;
+      width: 0;
+      z-index: 1;
+      left: 30px;
+      border: medium solid var(--light-bg);
+      border-width: 10px 10px 10px 0;
+      border-color: transparent var(--light-bg) transparent transparent;
+    }
+    
+    .right::after {
+      left: -13px;
+    }
+    
+    .timeline-content {
+      padding: 20px 30px;
+      background-color: white;
+      position: relative;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    @media screen and (max-width: 768px) {
+      .timeline::after {
+        left: 31px;
+      }
+      
+      .timeline-item {
+        width: 100%;
+        padding-left: 70px;
+        padding-right: 25px;
+      }
+      
+      .timeline-item::before {
+        left: 60px;
+        border-width: 10px 10px 10px 0;
+        border-color: transparent var(--light-bg) transparent transparent;
+      }
+      
+      .left::after, .right::after {
+        left: 18px;
+      }
+      
+      .right {
+        left: 0%;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <!-- Navigation Bar -->
+  <nav class="navbar py-4 px-6 md:px-12 flex flex-wrap items-center justify-between">
+    <div class="flex items-center">
+<img src="logo1.png" alt="Indian Army Logo" class="h-45 w-auto mr-4">
+      <span class="logo-text">
+        <span class="en">Indian Army Recruitment Portal</span>
+        <span>भारतीय सेना भर्ती पोर्टल</span>
+      </span>
+    </div>
+    
+    <div class="block lg:hidden">
+      <button id="menu-toggle" class="text-white focus:outline-none">
+        <i class="fas fa-bars text-2xl"></i>
+      </button>
+    </div>
+    
+    <div id="menu" class="hidden w-full lg:flex lg:items-center lg:w-auto mt-4 lg:mt-0">
+      <div class="text-white lg:flex text-lg">
+        <a href="javascript:void(0)" class="nav-link active block px-4 py-2 hover:text-yellow-300 transition-colors nav-item" data-section="home">
+          <span class="en">Home</span>
+          <span class="hi hidden">होम</span>
+        </a>
+        <a href=login.html class="nav-link block px-4 py-2 hover:text-yellow-300 transition-colors nav-item" data-section="registration">
+          <span class="en">Registration</span>
+          <span class="hi hidden">पंजीकरण</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-link block px-4 py-2 hover:text-yellow-300 transition-colors nav-item" data-section="eligibility">
+          <span class="en">Eligibility</span>
+          <span class="hi hidden">योग्यता</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-link block px-4 py-2 hover:text-yellow-300 transition-colors nav-item" data-section="documents">
+          <span class="en">Document Upload</span>
+          <span class="hi hidden">दस्तावेज़ अपलोड</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-link block px-4 py-2 hover:text-yellow-300 transition-colors nav-item" data-section="exams">
+          <span class="en">Exam Schedule</span>
+          <span class="hi hidden">परीक्षा अनुसूची</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-link block px-4 py-2 hover:text-yellow-300 transition-colors nav-item" data-section="results">
+          <span class="en">Results</span>
+          <span class="hi hidden">परिणाम</span>
+        </a>
+        <a href="javascript:void(0)" class="nav-link block px-4 py-2 hover:text-yellow-300 transition-colors nav-item" data-section="support">
+          <span class="en">Support</span>
+          <span class="hi hidden">सहायता</span>
+        </a>
+      </div>
+      
+      <div class="mt-4 lg:mt-0 lg:ml-6 flex items-center text-white">
+        <span class="lang-label en">English</span>
+        <label class="language-switch mx-2">
+          <input type="checkbox" id="language-toggle">
+          <span class="language-slider"></span>
+        </label>
+        <span class="lang-label hi">हिंदी</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="flex-grow">
+    <!-- Home Section -->
+    <section id="home" class="section-content">
+      <!-- Hero Section -->
+      <div class="hero-section py-20 px-6 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+          <span class="en">Join the Indian Army</span>
+          <span class="hi hidden">भारतीय सेना में शामिल हों</span>
+        </h1>
+        <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+          <span class="en">A life less ordinary. Service to the nation. Honor, duty, courage.</span>
+          <span class="hi hidden">एक असाधारण जीवन। राष्ट्र की सेवा। सम्मान, कर्तव्य, साहस।</span>
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+         <a href="login.html" class="btn-primary px-8 py-3 rounded-md text-lg font-semibold focus:outline-none nav-item">
+  <span class="en">Apply Now</span>
+  <span class="hi hidden">अभी आवेदन करें</span>
+</a>
+
+          <button class="btn-secondary px-8 py-3 rounded-md text-lg font-semibold focus:outline-none nav-item" data-section="eligibility">
+            <span class="en">Check Eligibility</span>
+            <span class="hi hidden">योग्यता जांचें</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Features Section -->
+      <div class="py-16 px-6 bg-white">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="text-3xl font-bold text-center mb-12">
+            <span class="en">Recruitment Process</span>
+            <span class="hi hidden">भर्ती प्रक्रिया</span>
+          </h2>
+          
+          <div class="grid md:grid-cols-3 gap-8">
+            <div class="card bg-white p-6 rounded-lg shadow-md text-center">
+              <div class="rounded-full bg-green-100 w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-user-plus text-2xl text-green-600"></i>
+              </div>
+              <h3 class="text-xl font-semibold mb-3">
+                <span class="en">Register Online</span>
+                <span class="hi hidden">ऑनलाइन पंजीकरण करें</span>
+              </h3>
+              <p class="text-gray-600">
+                <span class="en">Create an account and complete your profile with personal details.</span>
+                <span class="hi hidden">एक खाता बनाएं और व्यक्तिगत विवरण के साथ अपनी प्रोफ़ाइल पूरी करें।</span>
+              </p>
+            </div>
+            
+            <div class="card bg-white p-6 rounded-lg shadow-md text-center">
+              <div class="rounded-full bg-blue-100 w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-clipboard-check text-2xl text-blue-600"></i>
+              </div>
+              <h3 class="text-xl font-semibold mb-3">
+                <span class="en">Physical & Medical Test</span>
+                <span class="hi hidden">शारीरिक और चिकित्सा परीक्षण</span>
+              </h3>
+              <p class="text-gray-600">
+                <span class="en">Undergo physical fitness tests and thorough medical examination.</span>
+                <span class="hi hidden">शारीरिक फिटनेस परीक्षण और पूर्ण चिकित्सा परीक्षण से गुजरें।</span>
+              </p>
+            </div>
+            
+            <div class="card bg-white p-6 rounded-lg shadow-md text-center">
+              <div class="rounded-full bg-yellow-100 w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-graduation-cap text-2xl text-yellow-600"></i>
+              </div>
+              <h3 class="text-xl font-semibold mb-3">
+                <span class="en">Written Examination</span>
+                <span class="hi hidden">लिखित परीक्षा</span>
+              </h3>
+              <p class="text-gray-600">
+                <span class="en">Take the Common Entrance Examination to qualify for recruitment.</span>
+                <span class="hi hidden">भर्ती के लिए योग्यता प्राप्त करने के लिए सामान्य प्रवेश परीक्षा लें।</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Current Openings -->
+      <div class="py-16 px-6 bg-gray-100">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="text-3xl font-bold text-center mb-12">
+            <span class="en">Current Recruitment Drives</span>
+            <span class="hi hidden">वर्तमान भर्ती अभियान</span>
+          </h2>
+          
+          <div class="grid md:grid-cols-2 gap-8">
+            <div class="card bg-white p-6 rounded-lg shadow-md">
+              <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-semibold">
+                  <span class="en">Technical Entry Scheme</span>
+                  <span class="hi hidden">तकनीकी प्रवेश योजना</span>
+                </h3>
+                <span class="bg-green-500 text-white text-xs px-3 py-1 rounded-full">
+                  <span class="en">Open</span>
+                  <span class="hi hidden">खुला</span>
+                </span>
+              </div>
+              <p class="text-gray-600 mb-4">
+                <span class="en">For candidates with 10+2 qualification in PCM with minimum 70% marks.</span>
+                <span class="hi hidden">न्यूनतम 70% अंकों के साथ PCM में 10+2 योग्यता वाले उम्मीदवारों के लिए।</span>
+              </p>
+              <div class="flex justify-between items-center text-sm text-gray-500">
+                <span>
+                  <i class="far fa-calendar-alt mr-1"></i> 
+                  <span class="en">Last Date: 30 June, 2025</span>
+                  <span class="hi hidden">अंतिम तिथि: 30 जून, 2025</span>
+                </span>
+                <button class="btn-primary px-4 py-2 rounded-md text-sm font-medium nav-item" data-section="registration">
+<a href="login.html" class="btn btn-primary">
+  <span class="en">Apply</span>
+</a>
+                  <span class="hi hidden">आवेदन करें</span>
+                </button>
+              </div>
+            </div>
+            
+            <div class="card bg-white p-6 rounded-lg shadow-md">
+              <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-semibold">
+                  <span class="en">Short Service Commission</span>
+                  <span class="hi hidden">शॉर्ट सर्विस कमीशन</span>
+                </h3>
+                <span class="bg-green-500 text-white text-xs px-3 py-1 rounded-full">
+                  <span class="en">Open</span>
+                  <span class="hi hidden">खुला</span>
+                </span>
+              </div>
+              <p class="text-gray-600 mb-4">
+                <span class="en">For engineering graduates and post-graduates with minimum 60% marks.</span>
+                <span class="hi hidden">न्यूनतम 60% अंकों के साथ इंजीनियरिंग स्नातक और स्नातकोत्तर के लिए।</span>
+              </p>
+              <div class="flex justify-between items-center text-sm text-gray-500">
+                <span>
+                  <i class="far fa-calendar-alt mr-1"></i> 
+                  <span class="en">Last Date: 15 July, 2025</span>
+                  <span class="hi hidden">अंतिम तिथि: 15 जुलाई, 2025</span>
+                </span>
+                <button class="btn-primary px-4 py-2 rounded-md text-sm font-medium nav-item" data-section="registration">
+                  <a href="login.html" class="btn btn-primary">
+  <span class="en">Apply</span>
+</a>
+
+                  <span class="hi hidden">आवेदन करें</span>
+                </button>
+              </div>
+            </div>
+            
+            <div class="card bg-white p-6 rounded-lg shadow-md">
+              <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-semibold">
+                  <span class="en">Soldiers (General Duty)</span>
+                  <span class="hi hidden">सैनिक (सामान्य ड्यूटी)</span>
+                </h3>
+                <span class="bg-green-500 text-white text-xs px-3 py-1 rounded-full">
+                  <span class="en">Open</span>
+                  <span class="hi hidden">खुला</span>
+                </span>
+              </div>
+              <p class="text-gray-600 mb-4">
+                <span class="en">For 10th and 12th pass candidates between 17.5 to 21 years of age.</span>
+                <span class="hi hidden">17.5 से 21 वर्ष की आयु के बीच 10वीं और 12वीं पास उम्मीदवारों के लिए।</span>
+              </p>
+              <div class="flex justify-between items-center text-sm text-gray-500">
+                <span>
+                  <i class="far fa-calendar-alt mr-1"></i> 
+                  <span class="en">Last Date: 20 August, 2025</span>
+                  <span class="hi hidden">अंतिम तिथि: 20 अगस्त, 2025</span>
+                </span>
+                <button class="btn-primary px-4 py-2 rounded-md text-sm font-medium nav-item" data-section="registration">
+<a href="login.html" class="btn btn-primary">
+  <span class="en">Apply</span>
+</a>
+
+                  <span class="hi hidden">आवेदन करें</span>
+                </button>
+              </div>
+            </div>
+            
+            <div class="card bg-white p-6 rounded-lg shadow-md">
+              <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-semibold">
+                  <span class="en">Women Military Police</span>
+                  <span class="hi hidden">महिला सैन्य पुलिस</span>
+                </h3>
+                <span class="bg-green-500 text-white text-xs px-3 py-1 rounded-full">
+                  <span class="en">Open</span>
+                  <span class="hi hidden">खुला</span>
+                </span>
+              </div>
+              <p class="text-gray-600 mb-4">
+                <span class="en">For female candidates with 10th/12th qualification between 17.5 to 21 years.</span>
+                <span class="hi hidden">17.5 से 21 वर्ष के बीच 10वीं/12वीं योग्यता वाली महिला उम्मीदवारों के लिए।</span>
+              </p>
+              <div class="flex justify-between items-center text-sm text-gray-500">
+                <span>
+                  <i class="far fa-calendar-alt mr-1"></i> 
+                  <span class="en">Last Date: 10 September, 2025</span>
+                  <span class="hi hidden">अंतिम तिथि: 10 सितंबर, 2025</span>
+                </span>
+                <button class="btn-primary px-4 py-2 rounded-md text-sm font-medium nav-item" data-section="registration">
+<a href=login.html class="btn btn-primary">
+  <span class="en">Apply</span>
+</a>
+
+                  <span class="hi hidden">आवेदन करें</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Testimonials Section -->
+      <div class="py-16 px-6 bg-white">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="text-3xl font-bold text-center mb-12">
+            <span class="en">Success Stories</span>
+            <span class="hi hidden">सफलता की कहानियां</span>
+          </h2>
+          
+          <div class="grid md:grid-cols-2 gap-8">
+            <div class="card bg-gray-50 p-6 rounded-lg shadow-md">
+              <div class="flex items-start mb-4">
+                <img src="https://cdn.pixabay.com/photo/2021/05/06/07/07/military-6233271_1280.jpg" alt="Officer" class="w-16 h-16 rounded-full object-cover mr-4">
+                <div>
+                  <h3 class="text-xl font-semibold">Lt. Rajesh Kumar</h3>
+                  <p class="text-gray-500 text-sm">
+                    <span class="en">Officer, Indian Army</span>
+                    <span class="hi hidden">अधिकारी, भारतीय सेना</span>
+                  </p>
+                </div>
+              </div>
+              <p class="text-gray-600 italic">
+                <span class="en">"The recruitment process was transparent and efficient. From application to final selection, everything was well organized. Proud to serve my nation now."</span>
+                <span class="hi hidden">"भर्ती प्रक्रिया पारदर्शी और कुशल थी। आवेदन से लेकर अंतिम चयन तक, सब कुछ अच्छी तरह से व्यवस्थित था। अब अपने राष्ट्र की सेवा करने पर गर्व है।"</span>
+              </p>
+            </div>
+            
+            <div class="card bg-gray-50 p-6 rounded-lg shadow-md">
+              <div class="flex items-start mb-4">
+                <img src="https://cdn.pixabay.com/photo/2016/09/21/03/54/soldier-1683852_1280.jpg" alt="Soldier" class="w-16 h-16 rounded-full object-cover mr-4">
+                <div>
+                  <h3 class="text-xl font-semibold">Hav. Priya Singh</h3>
+                  <p class="text-gray-500 text-sm">
+                    <span class="en">Women Military Police</span>
+                    <span class="hi hidden">महिला सैन्य पुलिस</span>
+                  </p>
+                </div>
+              </div>
+              <p class="text-gray-600 italic">
+                <span class="en">"As a woman joining the forces, I found the entire process supportive and encouraging. The online portal made the application process smooth and hassle-free."</span>
+                <span class="hi hidden">"सेना में शामिल होने वाली एक महिला के रूप में, मुझे पूरी प्रक्रिया सहायक और प्रोत्साहित करने वाली लगी। ऑनलाइन पोर्टल ने आवेदन प्रक्रिया को सरल और परेशानी मुक्त बना दिया।"</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Registration Section -->
+    <section id="registration" class="section-content hidden-section py-12 px-6">
+      <div class="max-w-4xl mx-auto">
+        <div class="section-card bg-white mb-8">
+          <div class="section-header">
+            <h2 class="text-2xl font-bold">
+              <span class="en">Registration</span>
+              <span class="hi hidden">पंजीकरण</span>
+            </h2>
+          </div>
+          
+          <div class="p-6">
+            <div class="progress-container">
+              <div class="progress-bar" style="width: 20%"></div>
+            </div>
+            
+            <div class="mb-6 text-center">
+              <h3 class="text-xl font-medium mb-2">
+                <span class="en">Step 1: Create Account</span>
+                <span class="hi hidden">चरण 1: खाता बनाएं</span>
+              </h3>
+              <p class="text-gray-600 mb-4">
+                <span class="en">Fill in your details to create an account. You will receive an OTP for verification.</span>
+                <span class="hi hidden">खाता बनाने के लिए अपना विवरण भरें। आपको सत्यापन के लिए OTP प्राप्त होगा।</span>
+              </p>
+            </div>
+            
+            <form id="registration-form" class="space-y-6">
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label for="fullname" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Full Name*</span>
+                    <span class="hi hidden">पूरा नाम*</span>
+                  </label>
+                  <input type="text" id="fullname" name="fullname" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                  <div class="error-message hidden" id="fullname-error"></div>
+                </div>
+                
+                <div>
+                  <label for="email" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Email Address*</span>
+                    <span class="hi hidden">ईमेल पता*</span>
+                  </label>
+                  <input type="email" id="email" name="email" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                  <div class="error-message hidden" id="email-error"></div>
+                </div>
+                
+                <div>
+                  <label for="mobile" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Mobile Number*</span>
+                    <span class="hi hidden">मोबाइल नंबर*</span>
+                  </label>
+                  <input type="tel" id="mobile" name="mobile" pattern="[0-9]{10}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                  <div class="error-message hidden" id="mobile-error"></div>
+                </div>
+                
+                <div>
+                  <label for="aadhar" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Aadhaar Number*</span>
+                    <span class="hi hidden">आधार नंबर*</span>
+                  </label>
+                  <input type="text" id="aadhar" name="aadhar" pattern="[0-9]{12}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                  <div class="error-message hidden" id="aadhar-error"></div>
+                </div>
+                
+                <div>
+                  <label for="dob" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Date of Birth*</span>
+                    <span class="hi hidden">जन्म तिथि*</span>
+                  </label>
+                  <input type="date" id="dob" name="dob" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                  <div class="error-message hidden" id="dob-error"></div>
+                </div>
+                
+                <div>
+                  <label for="gender" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Gender*</span>
+                    <span class="hi hidden">लिंग*</span>
+                  </label>
+                  <select id="gender" name="gender" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                    <option value="" disabled selected>
+                      <span class="en">Select Gender</span>
+                      <span class="hi hidden">लिंग चुनें</span>
+                    </option>
+                    <option value="male">
+                      <span class="en">Male</span>
+                      <span class="hi hidden">पुरुष</span>
+                    </option>
+                    <option value="female">
+                      <span class="en">Female</span>
+                      <span class="hi hidden">महिला</span>
+                    </option>
+                    <option value="other">
+                      <span class="en">Other</span>
+                      <span class="hi hidden">अन्य</span>
+                    </option>
+                  </select>
+                  <div class="error-message hidden" id="gender-error"></div>
+                </div>
+                
+                <div>
+                  <label for="password" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Create Password*</span>
+                    <span class="hi hidden">पासवर्ड बनाएं*</span>
+                  </label>
+                  <input type="password" id="password" name="password" minlength="8" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                  <div class="error-message hidden" id="password-error"></div>
+                  <p class="text-xs text-gray-500 mt-1">
+                    <span class="en">Min 8 characters with at least 1 uppercase, 1 number & 1 special character</span>
+                    <span class="hi hidden">कम से कम 1 अपरकेस, 1 नंबर और 1 विशेष वर्ण के साथ न्यूनतम 8 अक्षर</span>
+                  </p>
+                </div>
+                
+                <div>
+                  <label for="confirm-password" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Confirm Password*</span>
+                    <span class="hi hidden">पासवर्ड की पुष्टि*</span>
+                  </label>
+                  <input type="password" id="confirm-password" name="confirm-password" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                  <div class="error-message hidden" id="confirm-password-error"></div>
+                </div>
+              </div>
+              
+              <div class="mt-4">
+                <label class="flex items-start">
+                  <input type="checkbox" class="mt-1 mr-2" required>
+                  <span class="text-gray-700">
+                    <span class="en">I agree to the <a href="javascript:void(0)" class="text-blue-600 hover:underline">Terms of Service</a> and <a href="javascript:void(0)" class="text-blue-600 hover:underline">Privacy Policy</a></span>
+                    <span class="hi hidden">मैं <a href="javascript:void(0)" class="text-blue-600 hover:underline">सेवा की शर्तों</a> और <a href="javascript:void(0)" class="text-blue-600 hover:underline">गोपनीयता नीति</a> से सहमत हूं</span>
+                  </span>
+                </label>
+              </div>
+              
+              <div class="flex justify-center mt-8">
+                <button type="submit" class="btn-primary px-8 py-3 rounded-md text-lg font-semibold focus:outline-none">
+                  <span class="en">Create Account & Continue</span>
+                  <span class="hi hidden">खाता बनाएं और जारी रखें</span>
+                </button>
+              </div>
+              
+              <div class="text-center mt-4">
+                <p class="text-gray-600">
+                  <span class="en">Already have an account? <a href="javascript:void(0)" class="text-blue-600 hover:underline">Log In</a></span>
+                  <span class="hi hidden">पहले से ही एक खाता है? <a href="javascript:void(0)" class="text-blue-600 hover:underline">लॉग इन करें</a></span>
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Eligibility Section -->
+    <section id="eligibility" class="section-content hidden-section py-12 px-6">
+      <div class="max-w-4xl mx-auto">
+        <div class="section-card bg-white mb-8">
+          <div class="section-header">
+            <h2 class="text-2xl font-bold">
+              <span class="en">Eligibility Criteria</span>
+              <span class="hi hidden">पात्रता मानदंड</span>
+            </h2>
+          </div>
+          
+          <div class="p-6">
+            <div class="mb-8">
+              <h3 class="text-xl font-semibold mb-4">
+                <span class="en">Check Your Eligibility</span>
+                <span class="hi hidden">अपनी पात्रता जांचें</span>
+              </h3>
+              
+              <form id="eligibility-form" class="space-y-6">
+                <div>
+                  <label for="position" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Position you're applying for:</span>
+                    <span class="hi hidden">आप जिस पद के लिए आवेदन कर रहे हैं:</span>
+                  </label>
+                  <select id="position" name="position" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                    <option value="" disabled selected>
+                      <span class="en">Select Position</span>
+                      <span class="hi hidden">पद चुनें</span>
+                    </option>
+                    <option value="officer">
+                      <span class="en">Officer (Technical/Non-Technical)</span>
+                      <span class="hi hidden">अधिकारी (तकनीकी/गैर-तकनीकी)</span>
+                    </option>
+                    <option value="jco">
+                      <span class="en">Junior Commissioned Officer (JCO)</span>
+                      <span class="hi hidden">जूनियर कमीशंड अधिकारी (JCO)</span>
+                    </option>
+                    <option value="soldier">
+                      <span class="en">Soldier (General Duty)</span>
+                      <span class="hi hidden">सैनिक (सामान्य ड्यूटी)</span>
+                    </option>
+                    <option value="technical">
+                      <span class="en">Soldier (Technical)</span>
+                      <span class="hi hidden">सैनिक (तकनीकी)</span>
+                    </option>
+                    <option value="tradesman">
+                      <span class="en">Soldier (Tradesman)</span>
+                      <span class="hi hidden">सैनिक (ट्रेड्समैन)</span>
+                    </option>
+                    <option value="clerk">
+                      <span class="en">Soldier (Clerk/SKT)</span>
+                      <span class="hi hidden">सैनिक (क्लर्क/SKT)</span>
+                    </option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label for="age" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Age (in years):</span>
+                    <span class="hi hidden">आयु (वर्षों में):</span>
+                  </label>
+                  <input type="number" id="age" name="age" min="16" max="45" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                </div>
+                
+                <div>
+                  <label for="education" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Highest Educational Qualification:</span>
+                    <span class="hi hidden">उच्चतम शैक्षिक योग्यता:</span>
+                  </label>
+                  <select id="education" name="education" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                    <option value="" disabled selected>
+                      <span class="en">Select Qualification</span>
+                      <span class="hi hidden">योग्यता चुनें</span>
+                    </option>
+                    <option value="10th">
+                      <span class="en">10th Standard</span>
+                      <span class="hi hidden">10वीं कक्षा</span>
+                    </option>
+                    <option value="12th">
+                      <span class="en">12th Standard</span>
+                      <span class="hi hidden">12वीं कक्षा</span>
+                    </option>
+                    <option value="diploma">
+                      <span class="en">Diploma</span>
+                      <span class="hi hidden">डिप्लोमा</span>
+                    </option>
+                    <option value="graduate">
+                      <span class="en">Graduate</span>
+                      <span class="hi hidden">स्नातक</span>
+                    </option>
+                    <option value="postgraduate">
+                      <span class="en">Post Graduate</span>
+                      <span class="hi hidden">स्नातकोत्तर</span>
+                    </option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label for="height" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Height (in cm):</span>
+                    <span class="hi hidden">ऊंचाई (सेमी में):</span>
+                  </label>
+                  <input type="number" id="height" name="height" min="140" max="220" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                </div>
+                
+                <div>
+                  <label for="chest" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Chest (in cm, for male candidates):</span>
+                    <span class="hi hidden">छाती (सेमी में, पुरुष उम्मीदवारों के लिए):</span>
+                  </label>
+                  <input type="number" id="chest" name="chest" min="70" max="120" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none">
+                </div>
+                
+                <div>
+                  <label for="weight" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Weight (in kg):</span>
+                    <span class="hi hidden">वजन (किलोग्राम में):</span>
+                  </label>
+                  <input type="number" id="weight" name="weight" min="40" max="120" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                </div>
+                
+                <div>
+                  <label for="marital" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Marital Status:</span>
+                    <span class="hi hidden">वैवाहिक स्थिति:</span>
+                  </label>
+                  <select id="marital" name="marital" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                    <option value="" disabled selected>
+                      <span class="en">Select Status</span>
+                      <span class="hi hidden">स्थिति चुनें</span>
+                    </option>
+                    <option value="single">
+                      <span class="en">Single</span>
+                      <span class="hi hidden">अविवाहित</span>
+                    </option>
+                    <option value="married">
+                      <span class="en">Married</span>
+                      <span class="hi hidden">विवाहित</span>
+                    </option>
+                    <option value="divorced">
+                      <span class="en">Divorced</span>
+                      <span class="hi hidden">तलाकशुदा</span>
+                    </option>
+                    <option value="widowed">
+                      <span class="en">Widowed</span>
+                      <span class="hi hidden">विधवा/विधुर</span>
+                    </option>
+                  </select>
+                </div>
+                
+                <div class="flex justify-center mt-8">
+                  <button type="submit" class="btn-primary px-8 py-3 rounded-md text-lg font-semibold focus:outline-none">
+                    <span class="en">Check Eligibility</span>
+                    <span class="hi hidden">पात्रता जांचें</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+            
+            <div class="mt-12">
+              <h3 class="text-xl font-semibold mb-4">
+                <span class="en">General Eligibility Criteria</span>
+                <span class="hi hidden">सामान्य पात्रता मानदंड</span>
+              </h3>
+              
+              <div class="space-y-8">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <h4 class="font-medium text-lg mb-2">
+                    <span class="en">Officers Entry</span>
+                    <span class="hi hidden">अधिकारी प्रवेश</span>
+                  </h4>
+                  <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>
+                      <span class="en">Age: 19-25 years (variations as per entry scheme)</span>
+                      <span class="hi hidden">आयु: 19-25 वर्ष (प्रवेश योजना के अनुसार भिन्नताएं)</span>
+                    </li>
+                    <li>
+                      <span class="en">Education: Graduation/Post-Graduation (stream as per entry scheme)</span>
+                      <span class="hi hidden">शिक्षा: स्नातक/स्नातकोत्तर (प्रवेश योजना के अनुसार स्ट्रीम)</span>
+                    </li>
+                    <li>
+                      <span class="en">Selection: SSB Interview after UPSC/CDS/AFCAT/TGC/UES etc.</span>
+                      <span class="hi hidden">चयन: UPSC/CDS/AFCAT/TGC/UES आदि के बाद SSB साक्षात्कार</span>
+                    </li>
+                    <li>
+                      <span class="en">Physical Standards: Minimum height 157.5 cm for males, 152 cm for females</span>
+                      <span class="hi hidden">शारीरिक मानक: पुरुषों के लिए न्यूनतम ऊंचाई 157.5 सेमी, महिलाओं के लिए 152 सेमी</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <h4 class="font-medium text-lg mb-2">
+                    <span class="en">Junior Commissioned Officers (JCOs) & Other Ranks</span>
+                    <span class="hi hidden">जूनियर कमीशंड अधिकारी (JCO) और अन्य रैंक</span>
+                  </h4>
+                  <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>
+                      <span class="en">Age: 17.5-23 years (variations as per category)</span>
+                      <span class="hi hidden">आयु: 17.5-23 वर्ष (श्रेणी के अनुसार भिन्नताएं)</span>
+                    </li>
+                    <li>
+                      <span class="en">Education: 10th/12th pass (as per trade/category)</span>
+                      <span class="hi hidden">शिक्षा: 10वीं/12वीं पास (ट्रेड/श्रेणी के अनुसार)</span>
+                    </li>
+                    <li>
+                      <span class="en">Physical Standards:</span>
+                      <span class="hi hidden">शारीरिक मानक:</span>
+                      <ul class="list-circle list-inside ml-6 space-y-1 text-gray-700">
+                        <li>
+                          <span class="en">Height: 166-170 cm (region specific)</span>
+                          <span class="hi hidden">ऊंचाई: 166-170 सेमी (क्षेत्र विशिष्ट)</span>
+                        </li>
+                        <li>
+                          <span class="en">Chest: 77-82 cm with 5 cm expansion</span>
+                          <span class="hi hidden">छाती: 5 सेमी विस्तार के साथ 77-82 सेमी</span>
+                        </li>
+                        <li>
+                          <span class="en">Weight: Proportionate to height and age</span>
+                          <span class="hi hidden">वजन: ऊंचाई और उम्र के अनुपात में</span>
+                        </li>
+                      </ul>
+                    </li>
+                    <li>
+                      <span class="en">Medical Standards: SHAPE-1 (Psychological, Hearing, Appendages, Physical capacity, Eyesight)</span>
+                      <span class="hi hidden">चिकित्सा मानक: SHAPE-1 (मनोवैज्ञानिक, श्रवण, अंग, शारीरिक क्षमता, दृष्टि)</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <h4 class="font-medium text-lg mb-2">
+                    <span class="en">Other Requirements</span>
+                    <span class="hi hidden">अन्य आवश्यकताएँ</span>
+                  </h4>
+                  <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>
+                      <span class="en">Nationality: Indian citizen</span>
+                      <span class="hi hidden">राष्ट्रीयता: भारतीय नागरिक</span>
+                    </li>
+                    <li>
+                      <span class="en">Character: Good moral character</span>
+                      <span class="hi hidden">चरित्र: अच्छा नैतिक चरित्र</span>
+                    </li>
+                    <li>
+                      <span class="en">Medical Fitness: As per Army Medical Standards</span>
+                      <span class="hi hidden">चिकित्सा फिटनेस: सेना के चिकित्सा मानकों के अनुसार</span>
+                    </li>
+                    <li>
+                      <span class="en">Tattoo: Restricted as per Army rules</span>
+                      <span class="hi hidden">टैटू: सेना के नियमों के अनुसार प्रतिबंधित</span>
+                    </li>
+                    <li>
+                      <span class="en">No criminal records or ongoing cases</span>
+                      <span class="hi hidden">कोई आपराधिक रिकॉर्ड या चल रहे मामले नहीं</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              
+              <div class="mt-8 text-center">
+                <p class="text-gray-600 text-sm">
+                  <span class="en">Note: Criteria may vary slightly based on recruiting category, region, and specific recruitment notifications. Always refer to the latest recruitment notification for exact details.</span>
+                  <span class="hi hidden">नोट: मानदंड भर्ती श्रेणी, क्षेत्र और विशिष्ट भर्ती अधिसूचनाओं के आधार पर थोड़ा भिन्न हो सकते हैं। सटीक विवरण के लिए हमेशा नवीनतम भर्ती अधिसूचना देखें।</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Documents Upload Section -->
+    <section id="documents" class="section-content hidden-section py-12 px-6">
+      <div class="max-w-4xl mx-auto">
+        <div class="section-card bg-white mb-8">
+          <div class="section-header">
+            <h2 class="text-2xl font-bold">
+              <span class="en">Document Upload</span>
+              <span class="hi hidden">दस्तावेज़ अपलोड</span>
+            </h2>
+          </div>
+          
+          <div class="p-6">
+            <div class="mb-6 text-center">
+              <p class="text-gray-600 mb-4">
+                <span class="en">Please upload clear, scanned copies of the following documents in JPG, PNG or PDF format. Each file should not exceed 2MB.</span>
+                <span class="hi hidden">कृपया निम्नलिखित दस्तावेजों की स्पष्ट, स्कैन की गई प्रतियों को JPG, PNG या PDF प्रारूप में अपलोड करें। प्रत्येक फ़ाइल 2MB से अधिक नहीं होनी चाहिए।</span>
+              </p>
+            </div>
+            
+            <form id="document-upload-form" class="space-y-8">
+              <!-- Required Documents Section -->
+              <div>
+                <h3 class="text-xl font-semibold mb-4">
+                  <span class="en">Required Documents</span>
+                  <span class="hi hidden">आवश्यक दस्तावेज</span>
+                </h3>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                      <span class="en">Photograph (Recent, passport size)*</span>
+                      <span class="hi hidden">फोटोग्राफ (हाल का, पासपोर्ट साइज)*</span>
+                    </label>
+                    <div class="upload-area" id="photo-upload-area">
+                      <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
+                      <p class="mb-2">
+                        <span class="en">Click or drag to upload</span>
+                        <span class="hi hidden">अपलोड करने के लिए क्लिक करें या खींचें</span>
+                      </p>
+                      <p class="text-xs text-gray-500">
+                        <span class="en">JPG/PNG format, white background</span>
+                        <span class="hi hidden">JPG/PNG प्रारूप, सफेद पृष्ठभूमि</span>
+                      </p>
+                      <input type="file" id="photo" name="photo" accept="image/jpeg,image/png" class="hidden" required>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                      <span class="en">Signature*</span>
+                      <span class="hi hidden">हस्ताक्षर*</span>
+                    </label>
+                    <div class="upload-area" id="signature-upload-area">
+                      <i class="fas fa-signature text-3xl text-gray-400 mb-2"></i>
+                      <p class="mb-2">
+                        <span class="en">Click or drag to upload</span>
+                        <span class="hi hidden">अपलोड करने के लिए क्लिक करें या खींचें</span>
+                      </p>
+                      <p class="text-xs text-gray-500">
+                        <span class="en">JPG/PNG format, white background</span>
+                        <span class="hi hidden">JPG/PNG प्रारूप, सफेद पृष्ठभूमि</span>
+                      </p>
+                      <input type="file" id="signature" name="signature" accept="image/jpeg,image/png" class="hidden" required>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                      <span class="en">Aadhaar Card*</span>
+                      <span class="hi hidden">आधार कार्ड*</span>
+                    </label>
+                    <div class="upload-area" id="aadhaar-upload-area">
+                      <i class="fas fa-id-card text-3xl text-gray-400 mb-2"></i>
+                      <p class="mb-2">
+                        <span class="en">Click or drag to upload</span>
+                        <span class="hi hidden">अपलोड करने के लिए क्लिक करें या खींचें</span>
+                      </p>
+                      <p class="text-xs text-gray-500">
+                        <span class="en">JPG/PNG/PDF format</span>
+                        <span class="hi hidden">JPG/PNG/PDF प्रारूप</span>
+                      </p>
+                      <input type="file" id="aadhaar" name="aadhaar" accept="image/jpeg,image/png,application/pdf" class="hidden" required>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                      <span class="en">PAN Card*</span>
+                      <span class="hi hidden">पैन कार्ड*</span>
+                    </label>
+                    <div class="upload-area" id="pan-upload-area">
+                      <i class="fas fa-id-card text-3xl text-gray-400 mb-2"></i>
+                      <p class="mb-2">
+                        <span class="en">Click or drag to upload</span>
+                        <span class="hi hidden">अपलोड करने के लिए क्लिक करें या खींचें</span>
+                      </p>
+                      <p class="text-xs text-gray-500">
+                        <span class="en">JPG/PNG/PDF format</span>
+                        <span class="hi hidden">JPG/PNG/PDF प्रारूप</span>
+                      </p>
+                      <input type="file" id="pan" name="pan" accept="image/jpeg,image/png,application/pdf" class="hidden" required>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Educational Documents Section -->
+              <div>
+                <h3 class="text-xl font-semibold mb-4">
+                  <span class="en">Educational Documents</span>
+                  <span class="hi hidden">शैक्षिक दस्तावेज</span>
+                </h3>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                      <span class="en">10th Certificate & Marksheet*</span>
+                      <span class="hi hidden">10वीं प्रमाणपत्र और मार्कशीट*</span>
+                    </label>
+                    <div class="upload-area" id="tenth-upload-area">
+                      <i class="fas fa-file-alt text-3xl text-gray-400 mb-2"></i>
+                      <p class="mb-2">
+                        <span class="en">Click or drag to upload</span>
+                        <span class="hi hidden">अपलोड करने के लिए क्लिक करें या खींचें</span>
+                      </p>
+                      <p class="text-xs text-gray-500">
+                        <span class="en">JPG/PNG/PDF format</span>
+                        <span class="hi hidden">JPG/PNG/PDF प्रारूप</span>
+                      </p>
+                      <input type="file" id="tenth" name="tenth" accept="image/jpeg,image/png,application/pdf" class="hidden" required>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                      <span class="en">12th Certificate & Marksheet*</span>
+                      <span class="hi hidden">12वीं प्रमाणपत्र और मार्कशीट*</span>
+                    </label>
+                    <div class="upload-area" id="twelfth-upload-area">
+                      <i class="fas fa-file-alt text-3xl text-gray-400 mb-2"></i>
+                      <p class="mb-2">
+                        <span class="en">Click or drag to upload</span>
+                        <span class="hi hidden">अपलोड करने के लिए क्लिक करें या खींचें</span>
+                      </p>
+                      <p class="text-xs text-gray-500">
+                        <span class="en">JPG/PNG/PDF format</span>
+                        <span class="hi hidden">JPG/PNG/PDF प्रारूप</span>
+                      </p>
+                      <input type="file" id="twelfth" name="twelfth" accept="image/jpeg,image/png,application/pdf" class="hidden" required>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                      <span class="en">Graduation Degree/Diploma (if applicable)</span>
+                      <span class="hi hidden">स्नातक डिग्री/डिप्लोमा (यदि लागू हो)</span>
+                    </label>
+                    <div class="upload-area" id="graduation-upload-area">
+                      <i class="fas fa-file-alt text-3xl text-gray-400 mb-2"></i>
+                      <p class="mb-2">
+                        <span class="en">Click or drag to upload</span>
+                        <span class="hi hidden">अपलोड करने के लिए क्लिक करें या खींचें</span>
+                      </p>
+                      <p class="text-xs text-gray-500">
+                        <span class="en">JPG/PNG/PDF format</span>
+                        <span class="hi hidden">JPG/PNG/PDF प्रारूप</span>
+                      </p>
+                      <input type="file" id="graduation" name="graduation" accept="image/jpeg,image/png,application/pdf" class="hidden">
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                      <span class="en">Post-Graduation (if applicable)</span>
+                      <span class="hi hidden">स्नातकोत्तर (यदि लागू हो)</span>
+                    </label>
+                    <div class="upload-area" id="postgraduation-upload-area">
+                      <i class="fas fa-file-alt text-3xl text-gray-400 mb-2"></i>
+                      <p class="mb-2">
+                        <span class="en">Click or drag to upload</span>
+                        <span class="hi hidden">अपलोड करने के लिए क्लिक करें या खींचें</span>
+                      </p>
+                      <p class="text-xs text-gray-500">
+                        <span class="en">JPG/PNG/PDF format</span>
+                        <span class="hi hidden">JPG/PNG/PDF प्रारूप</span>
+                      </p>
+                      <input type="file" id="postgraduation" name="postgraduation" accept="image/jpeg,image/png,application/pdf" class="hidden">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Additional Documents Section -->
+              <div>
+                <h3 class="text-xl font-semibold mb-4">
+                  <span class="en">Additional Documents</span>
+                  <span class="hi hidden">अतिरिक्त दस्तावेज</span>
+                </h3>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                      <span class="en">Domicile/Residence Certificate*</span>
+                      <span class="hi hidden">डोमिसाइल/निवास प्रमाणपत्र*</span>
+                    </label>
+                    <div class="upload-area" id="domicile-upload-area">
+                      <i class="fas fa-file-alt text-3xl text-gray-400 mb-2"></i>
+                      <p class="mb-2">
+                        <span class="en">Click or drag to upload</span>
+                        <span class="hi hidden">अपलोड करने के लिए क्लिक करें या खींचें</span>
+                      </p>
+                      <p class="text-xs text-gray-500">
+                        <span class="en">JPG/PNG/PDF format</span>
+                        <span class="hi hidden">JPG/PNG/PDF प्रारूप</span>
+                      </p>
+                      <input type="file" id="domicile" name="domicile" accept="image/jpeg,image/png,application/pdf" class="hidden" required>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                      <span class="en">Caste Certificate (if applicable)</span>
+                      <span class="hi hidden">जाति प्रमाणपत्र (यदि लागू हो)</span>
+                    </label>
+                    <div class="upload-area" id="caste-upload-area">
+                      <i class="fas fa-file-alt text-3xl text-gray-400 mb-2"></i>
+                      <p class="mb-2">
+                        <span class="en">Click or drag to upload</span>
+                        <span class="hi hidden">अपलोड करने के लिए क्लिक करें या खींचें</span>
+                      </p>
+                      <p class="text-xs text-gray-500">
+                        <span class="en">JPG/PNG/PDF format</span>
+                        <span class="hi hidden">JPG/PNG/PDF प्रारूप</span>
+                      </p>
+                      <input type="file" id="caste" name="caste" accept="image/jpeg,image/png,application/pdf" class="hidden">
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                      <span class="en">NCC Certificate (if applicable)</span>
+                      <span class="hi hidden">NCC प्रमाणपत्र (यदि लागू हो)</span>
+                    </label>
+                    <div class="upload-area" id="ncc-upload-area">
+                      <i class="fas fa-file-alt text-3xl text-gray-400 mb-2"></i>
+                      <p class="mb-2">
+                        <span class="en">Click or drag to upload</span>
+                        <span class="hi hidden">अपलोड करने के लिए क्लिक करें या खींचें</span>
+                      </p>
+                      <p class="text-xs text-gray-500">
+                        <span class="en">JPG/PNG/PDF format</span>
+                        <span class="hi hidden">JPG/PNG/PDF प्रारूप</span>
+                      </p>
+                      <input type="file" id="ncc" name="ncc" accept="image/jpeg,image/png,application/pdf" class="hidden">
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label class="block text-gray-700 font-medium mb-2">
+                      <span class="en">Sports Certificate (if applicable)</span>
+                      <span class="hi hidden">खेल प्रमाणपत्र (यदि लागू हो)</span>
+                    </label>
+                    <div class="upload-area" id="sports-upload-area">
+                      <i class="fas fa-file-alt text-3xl text-gray-400 mb-2"></i>
+                      <p class="mb-2">
+                        <span class="en">Click or drag to upload</span>
+                        <span class="hi hidden">अपलोड करने के लिए क्लिक करें या खींचें</span>
+                      </p>
+                      <p class="text-xs text-gray-500">
+                        <span class="en">JPG/PNG/PDF format</span>
+                        <span class="hi hidden">JPG/PNG/PDF प्रारूप</span>
+                      </p>
+                      <input type="file" id="sports" name="sports" accept="image/jpeg,image/png,application/pdf" class="hidden">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="mt-8 text-center">
+                <p class="text-gray-600 text-sm mb-6">
+                  <span class="en">Note: All documents marked with * are mandatory. Make sure all documents are clearly visible and properly scanned.</span>
+                  <span class="hi hidden">नोट: * से चिह्नित सभी दस्तावेज अनिवार्य हैं। सुनिश्चित करें कि सभी दस्तावेज स्पष्ट रूप से दिखाई दे रहे हैं और ठीक से स्कैन किए गए हैं।</span>
+                </p>
+                
+                <div class="flex justify-center">
+                  <button type="submit" class="btn-primary px-8 py-3 rounded-md text-lg font-semibold focus:outline-none">
+                    <span class="en">Upload Documents</span>
+                    <span class="hi hidden">दस्तावेज़ अपलोड करें</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Exam Schedule Section -->
+    <section id="exams" class="section-content hidden-section py-12 px-6">
+      <div class="max-w-4xl mx-auto">
+        <div class="section-card bg-white mb-8">
+          <div class="section-header">
+            <h2 class="text-2xl font-bold">
+              <span class="en">Exam Schedule</span>
+              <span class="hi hidden">परीक्षा अनुसूची</span>
+            </h2>
+          </div>
+          
+          <div class="p-6">
+            <div class="mb-8">
+              <h3 class="text-xl font-semibold mb-4">
+                <span class="en">Upcoming Examinations</span>
+                <span class="hi hidden">आगामी परीक्षाएं</span>
+              </h3>
+              
+              <div class="timeline">
+                <div class="timeline-item left">
+                  <div class="timeline-content">
+                    <h2 class="font-bold text-lg">
+                      <span class="en">Combined Defence Services (CDS) Examination</span>
+                      <span class="hi hidden">संयुक्त रक्षा सेवा (CDS) परीक्षा</span>
+                    </h2>
+                    <p class="text-gray-500 mb-2">
+                      <i class="far fa-calendar-alt mr-2"></i> 
+                      <span class="en">15 Sept, 2025</span>
+                      <span class="hi hidden">15 सितंबर, 2025</span>
+                    </p>
+                    <p class="text-gray-600 mb-3">
+                      <span class="en">Written examination for officer entry into Army, Navy, and Air Force wings of NDA.</span>
+                      <span class="hi hidden">NDA के सेना, नौसेना और वायु सेना विंग्स में अधिकारी प्रवेश के लिए लिखित परीक्षा।</span>
+                    </p>
+                    <a href=admmitcard.html class="text-blue-600 hover:underline text-sm font-medium">
+                      <span class="en">Download Admit Card</span>
+                      <span class="hi hidden">प्रवेश पत्र डाउनलोड करें</span>
+                    </a>
+                  </div>
+                </div>
+                
+                <div class="timeline-item right">
+                  <div class="timeline-content">
+                    <h2 class="font-bold text-lg">
+                      <span class="en">Technical Entry Scheme Written Exam</span>
+                      <span class="hi hidden">तकनीकी प्रवेश योजना लिखित परीक्षा</span>
+                    </h2>
+                    <p class="text-gray-500 mb-2">
+                      <i class="far fa-calendar-alt mr-2"></i> 
+                      <span class="en">10 Oct, 2025</span>
+                      <span class="hi hidden">10 अक्टूबर, 2025</span>
+                    </p>
+                    <p class="text-gray-600 mb-3">
+                      <span class="en">Technical aptitude test for engineering graduates seeking officer rank.</span>
+                      <span class="hi hidden">अधिकारी रैंक चाहने वाले इंजीनियरिंग स्नातकों के लिए तकनीकी योग्यता परीक्षण।</span>
+                    </p>
+                    <p class="text-sm bg-yellow-100 p-2 rounded">
+                      <span class="en">Admit card will be available 2 weeks before exam</span>
+                      <span class="hi hidden">प्रवेश पत्र परीक्षा से 2 सप्ताह पहले उपलब्ध होगा</span>
+                    </p>
+                  </div>
+                </div>
+                
+                <div class="timeline-item left">
+                  <div class="timeline-content">
+                    <h2 class="font-bold text-lg">
+                      <span class="en">Common Entrance Examination</span>
+                      <span class="hi hidden">सामान्य प्रवेश परीक्षा</span>
+                    </h2>
+                    <p class="text-gray-500 mb-2">
+                      <i class="far fa-calendar-alt mr-2"></i> 
+                      <span class="en">25 Oct, 2025</span>
+                      <span class="hi hidden">25 अक्टूबर, 2025</span>
+                    </p>
+                    <p class="text-gray-600 mb-3">
+                      <span class="en">Written examination for Soldier (General Duty), Soldier Technical and other ranks.</span>
+                      <span class="hi hidden">सैनिक (सामान्य ड्यूटी), सैनिक तकनीकी और अन्य रैंकों के लिए लिखित परीक्षा।</span>
+                    </p>
+                    <p class="text-sm bg-yellow-100 p-2 rounded">
+                      <span class="en">Admit card will be available 2 weeks before exam</span>
+                      <span class="hi hidden">प्रवेश पत्र परीक्षा से 2 सप्ताह पहले उपलब्ध होगा</span>
+                    </p>
+                  </div>
+                </div>
+                
+                <div class="timeline-item right">
+                  <div class="timeline-content">
+                    <h2 class="font-bold text-lg">
+                      <span class="en">Women Military Police Selection Test</span>
+                      <span class="hi hidden">महिला सैन्य पुलिस चयन परीक्षण</span>
+                    </h2>
+                    <p class="text-gray-500 mb-2">
+                      <i class="far fa-calendar-alt mr-2"></i> 
+                      <span class="en">15 Nov, 2025</span>
+                      <span class="hi hidden">15 नवंबर, 2025</span>
+                    </p>
+                    <p class="text-gray-600 mb-3">
+                      <span class="en">Physical, medical and written tests for Women Military Police candidates.</span>
+                      <span class="hi hidden">महिला सैन्य पुलिस उम्मीदवारों के लिए शारीरिक, चिकित्सा और लिखित परीक्षण।</span>
+                    </p>
+                    <p class="text-sm bg-yellow-100 p-2 rounded">
+                      <span class="en">Admit card will be available 2 weeks before exam</span>
+                      <span class="hi hidden">प्रवेश पत्र परीक्षा से 2 सप्ताह पहले उपलब्ध होगा</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-12">
+              <h3 class="text-xl font-semibold mb-4">
+                <span class="en">Exam Preparation Resources</span>
+                <span class="hi hidden">परीक्षा तैयारी संसाधन</span>
+              </h3>
+              
+              <div class="grid md:grid-cols-3 gap-6">
+                <div class="card bg-white shadow-md rounded-lg overflow-hidden">
+                  <div class="p-4">
+                    <h4 class="font-semibold text-lg mb-2">
+                      <span class="en">Study Materials</span>
+                      <span class="hi hidden">अध्ययन सामग्री</span>
+                    </h4>
+                    <p class="text-gray-600 text-sm mb-4">
+                      <span class="en">Access preparation books, sample papers, and previous year questions.</span>
+                      <span class="hi hidden">तैयारी पुस्तकें, नमूना पेपर और पिछले वर्ष के प्रश्न एक्सेस करें।</span>
+                    </p>
+                    <a href="javascript:void(0)" class="text-blue-600 hover:underline text-sm font-medium">
+                      <span class="en">Access Resources</span>
+                      <span class="hi hidden">संसाधन एक्सेस करें</span>
+                    </a>
+                  </div>
+                </div>
+                
+                <div class="card bg-white shadow-md rounded-lg overflow-hidden">
+                  <div class="p-4">
+                    <h4 class="font-semibold text-lg mb-2">
+                      <span class="en">Physical Fitness</span>
+                      <span class="hi hidden">शारीरिक फिटनेस</span>
+                    </h4>
+                    <p class="text-gray-600 text-sm mb-4">
+                      <span class="en">Training guides for physical tests including running, push-ups, and other exercises.</span>
+                      <span class="hi hidden">दौड़ने, पुश-अप और अन्य व्यायामों सहित शारीरिक परीक्षणों के लिए प्रशिक्षण गाइड।</span>
+                    </p>
+                    <a href="javascript:void(0)" class="text-blue-600 hover:underline text-sm font-medium">
+                      <span class="en">View Fitness Guidelines</span>
+                      <span class="hi hidden">फिटनेस दिशानिर्देश देखें</span>
+                    </a>
+                  </div>
+                </div>
+                
+                <div class="card bg-white shadow-md rounded-lg overflow-hidden">
+                  <div class="p-4">
+                    <h4 class="font-semibold text-lg mb-2">
+                      <span class="en">Mock Tests</span>
+                      <span class="hi hidden">मॉक टेस्ट</span>
+                    </h4>
+                    <p class="text-gray-600 text-sm mb-4">
+                      <span class="en">Practice with online mock tests that simulate the actual exam environment.</span>
+                      <span class="hi hidden">वास्तविक परीक्षा वातावरण का अनुकरण करने वाले ऑनलाइन मॉक टेस्ट के साथ अभ्यास करें।</span>
+                    </p>
+                    <a href="javascript:void(0)" class="text-blue-600 hover:underline text-sm font-medium">
+                      <span class="en">Take Mock Test</span>
+                      <span class="hi hidden">मॉक टेस्ट लें</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-12">
+              <h3 class="text-xl font-semibold mb-4">
+                <span class="en">Important Instructions</span>
+                <span class="hi hidden">महत्वपूर्ण निर्देश</span>
+              </h3>
+              
+              <div class="bg-blue-50 p-4 rounded-lg">
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                  <li>
+                    <span class="en">Candidates must carry their Admit Card and a valid Photo ID (Aadhaar/PAN/Driving License/Voter ID).</span>
+                    <span class="hi hidden">उम्मीदवारों को अपना प्रवेश पत्र और एक वैध फोटो आईडी (आधार/पैन/ड्राइविंग लाइसेंस/वोटर आईडी) ले जाना होगा।</span>
+                  </li>
+                  <li>
+                    <span class="en">Report to the examination center at least 1 hour before the scheduled time.</span>
+                    <span class="hi hidden">निर्धारित समय से कम से कम 1 घंटे पहले परीक्षा केंद्र में रिपोर्ट करें।</span>
+                  </li>
+                  <li>
+                    <span class="en">Electronic devices, including mobile phones, are strictly prohibited in the examination hall.</span>
+                    <span class="hi hidden">मोबाइल फोन सहित इलेक्ट्रॉनिक उपकरणों पर परीक्षा हॉल में सख्ती से प्रतिबंध है।</span>
+                  </li>
+                  <li>
+                    <span class="en">For physical tests, wear appropriate sports attire and bring water.</span>
+                    <span class="hi hidden">शारीरिक परीक्षणों के लिए, उपयुक्त खेल पोशाक पहनें और पानी लाएं।</span>
+                  </li>
+                  <li>
+                    <span class="en">Any candidate found using unfair means will be disqualified.</span>
+                    <span class="hi hidden">अनुचित साधनों का उपयोग करते हुए पाए गए किसी भी उम्मीदवार को अयोग्य घोषित कर दिया जाएगा।</span>
+                  </li>
+                  <li>
+                    <span class="en">Medical certificates, if applicable, must be from a recognized government hospital.</span>
+                    <span class="hi hidden">चिकित्सा प्रमाणपत्र, यदि लागू हों, मान्यता प्राप्त सरकारी अस्पताल से होने चाहिए।</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Results Section -->
+    <section id="results" class="section-content hidden-section py-12 px-6">
+      <div class="max-w-4xl mx-auto">
+        <div class="section-card bg-white mb-8">
+          <div class="section-header">
+            <h2 class="text-2xl font-bold">
+              <span class="en">Results</span>
+              <span class="hi hidden">परिणाम</span>
+            </h2>
+          </div>
+          
+          <div class="p-6">
+            <div class="mb-8">
+              <h3 class="text-xl font-semibold mb-4">
+                <span class="en">Check Your Results</span>
+                <span class="hi hidden">अपने परिणाम जांचें</span>
+              </h3>
+              
+              <form id="results-form" class="space-y-6 max-w-md mx-auto">
+                <div>
+                  <label for="result-exam" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Select Examination</span>
+                    <span class="hi hidden">परीक्षा चुनें</span>
+                  </label>
+                  <select id="result-exam" name="result-exam" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                    <option value="" disabled selected>
+                      <span class="en">Select an examination</span>
+                      <span class="hi hidden">एक परीक्षा चुनें</span>
+                    </option>
+                    <option value="cds-2025-1">
+                      <span class="en">Combined Defence Services (CDS) - I, 2025</span>
+                      <span class="hi hidden">संयुक्त रक्षा सेवा (CDS) - I, 2025</span>
+                    </option>
+                    <option value="tech-entry-2025">
+                      <span class="en">Technical Entry Scheme, Apr 2025</span>
+                      <span class="hi hidden">तकनीकी प्रवेश योजना, अप्रैल 2025</span>
+                    </option>
+                    <option value="afcat-2025-1">
+                      <span class="en">AFCAT I, 2025</span>
+                      <span class="hi hidden">AFCAT I, 2025</span>
+                    </option>
+                    <option value="soldier-gd-2025">
+                      <span class="en">Soldier (GD) Recruitment, Jan 2025</span>
+                      <span class="hi hidden">सैनिक (GD) भर्ती, जनवरी 2025</span>
+                    </option>
+                    <option value="wmp-2025">
+                      <span class="en">Women Military Police, Mar 2025</span>
+                      <span class="hi hidden">महिला सैन्य पुलिस, मार्च 2025</span>
+                    </option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label for="roll-number" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Roll Number / Registration ID</span>
+                    <span class="hi hidden">रोल नंबर / पंजीकरण आईडी</span>
+                  </label>
+                  <input type="text" id="roll-number" name="roll-number" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                </div>
+                
+                <div>
+                  <label for="dob-results" class="block text-gray-700 font-medium mb-2">
+                    <span class="en">Date of Birth</span>
+                    <span class="hi hidden">जन्म तिथि</span>
+                  </label>
+                  <input type="date" id="dob-results" name="dob-results" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                </div>
+                
+                <div class="flex justify-center mt-8">
+                  <button type="submit" class="btn-primary px-8 py-3 rounded-md text-lg font-semibold focus:outline-none">
+                    <span class="en">Check Result</span>
+                    <span class="hi hidden">परिणाम देखें</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+            
+            <div class="mt-12">
+              <h3 class="text-xl font-semibold mb-4">
+                <span class="en">Recent Result Announcements</span>
+                <span class="hi hidden">हाल की परिणाम घोषणाएँ</span>
+              </h3>
+              
+              <div class="space-y-4">
+                <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div class="flex justify-between">
+                    <h4 class="font-medium">
+                      <span class="en">Technical Entry Scheme, Apr 2025</span>
+                      <span class="hi hidden">तकनीकी प्रवेश योजना, अप्रैल 2025</span>
+                    </h4>
+                    <span class="text-green-600 text-sm">
+                      <span class="en">Declared: 05 Apr, 2025</span>
+                      <span class="hi hidden">घोषित: 05 अप्रैल, 2025</span>
+                    </span>
+                  </div>
+                  <div class="mt-2 flex items-center">
+                    <a href="javascript:void(0)" class="text-blue-600 hover:underline text-sm font-medium flex items-center">
+                      <i class="fas fa-download mr-1"></i>
+                      <span class="en">Download Result PDF</span>
+                      <span class="hi hidden">परिणाम PDF डाउनलोड करें</span>
+                    </a>
+                    <span class="mx-3 text-gray-400">|</span>
+                    <a href="javascript:void(0)" class="text-blue-600 hover:underline text-sm font-medium">
+                      <span class="en">Check Individual Result</span>
+                      <span class="hi hidden">व्यक्तिगत परिणाम जांचें</span>
+                    </a>
+                  </div>
+                </div>
+                
+                <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div class="flex justify-between">
+                    <h4 class="font-medium">
+                      <span class="en">Women Military Police, Mar 2025</span>
+                      <span class="hi hidden">महिला सैन्य पुलिस, मार्च 2025</span>
+                    </h4>
+                    <span class="text-green-600 text-sm">
+                      <span class="en">Declared: 20 Mar, 2025</span>
+                      <span class="hi hidden">घोषित: 20 मार्च, 2025</span>
+                    </span>
+                  </div>
+                  <div class="mt-2 flex items-center">
+                    <a href="javascript:void(0)" class="text-blue-600 hover:underline text-sm font-medium flex items-center">
+                      <i class="fas fa-download mr-1"></i>
+                      <span class="en">Download Result PDF</span>
+                      <span class="hi hidden">परिणाम PDF डाउनलोड करें</span>
+                    </a>
+                    <span class="mx-3 text-gray-400">|</span>
+                    <a href="javascript:void(0)" class="text-blue-600 hover:underline text-sm font-medium">
+                      <span class="en">Check Individual Result</span>
+                      <span class="hi hidden">व्यक्तिगत परिणाम जांचें</span>
+                    </a>
+                  </div>
+                </div>
+                
+                <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div class="flex justify-between">
+                    <h4 class="font-medium">
+                      <span class="en">AFCAT I, 2025</span>
+                      <span class="hi hidden">AFCAT I, 2025</span>
+                    </h4>
+                    <span class="text-green-600 text-sm">
+                      <span class="en">Declared: 15 Feb, 2025</span>
+                      <span class="hi hidden">घोषित: 15 फरवरी, 2025</span>
+                    </span>
+                  </div>
+                  <div class="mt-2 flex items-center">
+                    <a href="javascript:void(0)" class="text-blue-600 hover:underline text-sm font-medium flex items-center">
+                      <i class="fas fa-download mr-1"></i>
+                      <span class="en">Download Result PDF</span>
+                      <span class="hi hidden">परिणाम PDF डाउनलोड करें</span>
+                    </a>
+                    <span class="mx-3 text-gray-400">|</span>
+                    <a href="javascript:void(0)" class="text-blue-600 hover:underline text-sm font-medium">
+                      <span class="en">Check Individual Result</span>
+                      <span class="hi hidden">व्यक्तिगत परिणाम जांचें</span>
+                    </a>
+                  </div>
+                </div>
+                
+                <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div class="flex justify-between">
+                    <h4 class="font-medium">
+                      <span class="en">Soldier (GD) Recruitment, Jan 2025</span>
+                      <span class="hi hidden">सैनिक (GD) भर्ती, जनवरी 2025</span>
+                    </h4>
+                    <span class="text-green-600 text-sm">
+                      <span class="en">Declared: 10 Jan, 2025</span>
+                      <span class="hi hidden">घोषित: 10 जनवरी, 2025</span>
+                    </span>
+                  </div>
+                  <div class="mt-2 flex items-center">
+                    <a href="javascript:void(0)" class="text-blue-600 hover:underline text-sm font-medium flex items-center">
+                      <i class="fas fa-download mr-1"></i>
+                      <span class="en">Download Result PDF</span>
+                      <span class="hi hidden">परिणाम PDF डाउनलोड करें</span>
+                    </a>
+                    <span class="mx-3 text-gray-400">|</span>
+                    <a href="javascript:void(0)" class="text-blue-600 hover:underline text-sm font-medium">
+                      <span class="en">Check Individual Result</span>
+                      <span class="hi hidden">व्यक्तिगत परिणाम जांचें</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-12">
+              <h3 class="text-xl font-semibold mb-4">
+                <span class="en">Next Steps After Selection</span>
+                <span class="hi hidden">चयन के बाद अगले कदम</span>
+              </h3>
+              
+              <div class="bg-green-50 p-4 rounded-lg">
+                <ol class="list-decimal list-inside space-y-3 text-gray-700">
+                  <li>
+                    <span class="font-medium">
+                      <span class="en">Medical Examination</span>
+                      <span class="hi hidden">चिकित्सा परीक्षण</span>
+                    </span>
+                    <p class="ml-6 mt-1 text-sm">
+                      <span class="en">Selected candidates will undergo a comprehensive medical examination at designated military hospitals.</span>
+                      <span class="hi hidden">चयनित उम्मीदवारों को नामित सैन्य अस्पतालों में व्यापक चिकित्सा परीक्षण से गुजरना होगा।</span>
+                    </p>
+                  </li>
+                  
+                  <li>
+                    <span class="font-medium">
+                      <span class="en">Document Verification</span>
+                      <span class="hi hidden">दस्तावेज़ सत्यापन</span>
+                    </span>
+                    <p class="ml-6 mt-1 text-sm">
+                      <span class="en">Original documents will be verified against the uploaded copies. Any discrepancy may lead to disqualification.</span>
+                      <span class="hi hidden">मूल दस्तावेजों का सत्यापन अपलोड की गई प्रतियों के साथ किया जाएगा। कोई भी विसंगति अयोग्यता का कारण बन सकती है।</span>
+                    </p>
+                  </li>
+                  
+                  <li>
+                    <span class="font-medium">
+                      <span class="en">Joining Letter</span>
+                      <span class="hi hidden">ज्वाइनिंग लेटर</span>
+                    </span>
+                    <p class="ml-6 mt-1 text-sm">
+                      <span class="en">Successful candidates will receive joining instructions with details about the training center and reporting date.</span>
+                      <span class="hi hidden">सफल उम्मीदवारों को प्रशिक्षण केंद्र और रिपोर्टिंग तिथि के बारे में विवरण के साथ ज्वाइनिंग निर्देश प्राप्त होंगे।</span>
+                    </p>
+                  </li>
+                  
+                  <li>
+                    <span class="font-medium">
+                      <span class="en">Initial Training</span>
+                      <span class="hi hidden">प्रारंभिक प्रशिक्षण</span>
+                    </span>
+                    <p class="ml-6 mt-1 text-sm">
+                      <span class="en">Depending on the entry scheme, candidates will undergo training at respective training establishments.</span>
+                      <span class="hi hidden">प्रवेश योजना के आधार पर, उम्मीदवार संबंधित प्रशिक्षण प्रतिष्ठानों में प्रशिक्षण से गुजरेंगे।</span>
+                    </p>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Support Section -->
+    <section id="support" class="section-content hidden-section py-12 px-6">
+      <div class="max-w-4xl mx-auto">
+        <div class="section-card bg-white mb-8">
+          <div class="section-header">
+            <h2 class="text-2xl font-bold">
+              <span class="en">Contact Support</span>
+              <span class="hi hidden">सहायता संपर्क</span>
+            </h2>
+          </div>
+          
+          <div class="p-6">
+            <div class="mb-8">
+              <h3 class="text-xl font-semibold mb-4">
+                <span class="en">How Can We Help You?</span>
+                <span class="hi hidden">हम आपकी कैसे मदद कर सकते हैं?</span>
+              </h3>
+              
+              <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h4 class="text-lg font-medium mb-4">
+                    <span class="en">Submit a Support Ticket</span>
+                    <span class="hi hidden">सहायता टिकट जमा करें</span>
+                  </h4>
+                  
+                  <form id="support-form" class="space-y-4">
+                    <div>
+                      <label for="support-name" class="block text-gray-700 font-medium mb-2">
+                        <span class="en">Full Name*</span>
+                        <span class="hi hidden">पूरा नाम*</span>
+                      </label>
+                      <input type="text" id="support-name" name="support-name" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                    </div>
+                    
+                    <div>
+                      <label for="support-email" class="block text-gray-700 font-medium mb-2">
+                        <span class="en">Email Address*</span>
+                        <span class="hi hidden">ईमेल पता*</span>
+                      </label>
+                      <input type="email" id="support-email" name="support-email" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                    </div>
+                    
+                    <div>
+                      <label for="support-mobile" class="block text-gray-700 font-medium mb-2">
+                        <span class="en">Mobile Number*</span>
+                        <span class="hi hidden">मोबाइल नंबर*</span>
+                      </label>
+                      <input type="tel" id="support-mobile" name="support-mobile" pattern="[0-9]{10}" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                    </div>
+                    
+                    <div>
+                      <label for="support-category" class="block text-gray-700 font-medium mb-2">
+                        <span class="en">Query Category*</span>
+                        <span class="hi hidden">प्रश्न श्रेणी*</span>
+                      </label>
+                      <select id="support-category" name="support-category" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required>
+                        <option value="" disabled selected>
+                          <span class="en">Select a category</span>
+                          <span class="hi hidden">एक श्रेणी चुनें</span>
+                        </option>
+                        <option value="registration">
+                          <span class="en">Registration Issues</span>
+                          <span class="hi hidden">पंजीकरण समस्याएं</span>
+                        </option>
+                        <option value="eligibility">
+                          <span class="en">Eligibility Questions</span>
+                          <span class="hi hidden">पात्रता प्रश्न</span>
+                        </option>
+                        <option value="documents">
+                          <span class="en">Document Upload</span>
+                          <span class="hi hidden">दस्तावेज़ अपलोड</span>
+                        </option>
+                        <option value="exams">
+                          <span class="en">Exam Related</span>
+                          <span class="hi hidden">परीक्षा संबंधित</span>
+                        </option>
+                        <option value="results">
+                          <span class="en">Results Related</span>
+                          <span class="hi hidden">परिणाम संबंधित</span>
+                        </option>
+                        <option value="technical">
+                          <span class="en">Technical Issues</span>
+                          <span class="hi hidden">तकनीकी समस्याएं</span>
+                        </option>
+                        <option value="other">
+                          <span class="en">Other</span>
+                          <span class="hi hidden">अन्य</span>
+                        </option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label for="support-message" class="block text-gray-700 font-medium mb-2">
+                        <span class="en">Your Message/Query*</span>
+                        <span class="hi hidden">आपका संदेश/प्रश्न*</span>
+                      </label>
+                      <textarea id="support-message" name="support-message" rows="4" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none" required></textarea>
+                    </div>
+                    
+                    <div>
+                      <label for="support-attachment" class="block text-gray-700 font-medium mb-2">
+                        <span class="en">Attach File (optional)</span>
+                        <span class="hi hidden">फ़ाइल अटैच करें (वैकल्पिक)</span>
+                      </label>
+                      <input type="file" id="support-attachment" name="support-attachment" class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none">
+                      <p class="text-xs text-gray-500 mt-1">
+                        <span class="en">Max file size: 5MB (PDF, JPG, PNG)</span>
+                        <span class="hi hidden">अधिकतम फ़ाइल आकार: 5MB (PDF, JPG, PNG)</span>
+                      </p>
+                    </div>
+                    
+                    <div class="mt-6">
+                      <button type="submit" class="btn-primary px-6 py-2 rounded-md font-medium focus:outline-none">
+                        <span class="en">Submit Query</span>
+                        <span class="hi hidden">प्रश्न जमा करें</span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+                
+                <div>
+                  <h4 class="text-lg font-medium mb-4">
+                    <span class="en">Contact Information</span>
+                    <span class="hi hidden">संपर्क जानकारी</span>
+                  </h4>
+                  
+                  <div class="space-y-6">
+                    <div class="flex items-start">
+                      <div class="text-green-600 mr-4 mt-1">
+                        <i class="fas fa-phone-alt"></i>
+                      </div>
+                      <div>
+                        <h5 class="font-medium">
+                          <span class="en">Helpline Numbers</span>
+                          <span class="hi hidden">हेल्पलाइन नंबर</span>
+                        </h5>
+                        <p class="text-gray-600">
+                          <span class="en">Toll Free: 011-26173215
+
+011-26175473 </span>
+                          <span class="hi hidden">टोल फ्री: 011-26173215
+</span>
+                        </p>
+                        <p class="text-gray-600">
+                          <span class="en">Direct: 011-25686451
+India Customer Care+2 </span>
+                          <span class="hi hidden">डायरेक्ट: 011-25686451</span>
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1">
+                          <span class="en">(Monday to Friday, 9:00 AM to 5:30 PM)</span>
+                          <span class="hi hidden">(सोमवार से शुक्रवार, सुबह 9:00 बजे से शाम 5:30 बजे तक)</span>
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                      <div class="text-green-600 mr-4 mt-1">
+                        <i class="fas fa-envelope"></i>
+                      </div>
+                      <div>
+                        <h5 class="font-medium">
+                          <span class="en">Email Support</span>
+                          <span class="hi hidden">ईमेल सपोर्ट</span>
+                        </h5>
+                        <p class="text-gray-600">
+                          <span class="en">General Queries: support@indianarmyrecruitment.gov.in</span>
+                          <span class="hi hidden">सामान्य प्रश्न: support@indianarmyrecruitment.gov.in</span>
+                        </p>
+                        <p class="text-gray-600">
+                          <span class="en">Technical Support: tech.support@indianarmyrecruitment.gov.in</span>
+                          <span class="hi hidden">तकनीकी सहायता: tech.support@indianarmyrecruitment.gov.in</span>
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                      <div class="text-green-600 mr-4 mt-1">
+                        <i class="fas fa-map-marker-alt"></i>
+                      </div>
+                      <div>
+                        <h5 class="font-medium">
+                          <span class="en">Headquarters</span>
+                          <span class="hi hidden">मुख्यालय</span>
+                        </h5>
+                        <p class="text-gray-600">
+                          <span class="en">Indian Army Recruitment Directorate,</span>
+                          <span class="hi hidden">भारतीय सेना भर्ती निदेशालय,</span>
+                        </p>
+                        <p class="text-gray-600">
+                          <span class="en">Integrated HQ of MoD (Army),</span>
+                          <span class="hi hidden">रक्षा मंत्रालय का एकीकृत मुख्यालय (सेना),</span>
+                        </p>
+                        <p class="text-gray-600">
+                          <span class="en">West Block-III, R.K. Puram, New Delhi - 110066</span>
+                          <span class="hi hidden">पश्चिम ब्लॉक-III, आर.के. पुरम, नई दिल्ली - 110066</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="mt-8">
+                    <h4 class="text-lg font-medium mb-4">
+                      <span class="en">Frequently Asked Questions</span>
+                      <span class="hi hidden">अक्सर पूछे जाने वाले प्रश्न</span>
+                    </h4>
+                    
+                    <div class="space-y-4">
+                      <div class="border border-gray-200 rounded-md overflow-hidden">
+                        <button class="faq-toggle w-full flex justify-between items-center p-4 bg-gray-50 text-left font-medium hover:bg-gray-100 transition-colors">
+                          <span>
+                            <span class="en">How can I update my profile information?</span>
+                            <span class="hi hidden">मैं अपनी प्रोफ़ाइल जानकारी कैसे अपडेट कर सकता हूं?</span>
+                          </span>
+                          <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-content hidden p-4 text-gray-600 text-sm">
+                          <span class="en">You can update your profile information by logging into your account, navigating to the "Profile" section, and clicking on the "Edit" button. Make the necessary changes and save your updated information.</span>
+                          <span class="hi hidden">आप अपने खाते में लॉग इन करके, "प्रोफ़ाइल" अनुभाग पर नेविगेट करके और "संपादित करें" बटन पर क्लिक करके अपनी प्रोफ़ाइल जानकारी अपडेट कर सकते हैं। आवश्यक परिवर्तन करें और अपनी अपडेट की गई जानकारी सहेजें।</span>
+                        </div>
+                      </div>
+                      
+                      <div class="border border-gray-200 rounded-md overflow-hidden">
+                        <button class="faq-toggle w-full flex justify-between items-center p-4 bg-gray-50 text-left font-medium hover:bg-gray-100 transition-colors">
+                          <span>
+                            <span class="en">What should I do if I forget my password?</span>
+                            <span class="hi hidden">अगर मैं अपना पासवर्ड भूल जाऊं तो मुझे क्या करना चाहिए?</span>
+                          </span>
+                          <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-content hidden p-4 text-gray-600 text-sm">
+                          <span class="en">If you forget your password, click on the "Forgot Password" link on the login page. Enter your registered email address, and we will send you a password reset link. Follow the instructions in the email to reset your password.</span>
+                          <span class="hi hidden">यदि आप अपना पासवर्ड भूल जाते हैं, तो लॉगिन पेज पर "पासवर्ड भूल गए" लिंक पर क्लिक करें। अपना पंजीकृत ईमेल पता दर्ज करें, और हम आपको एक पासवर्ड रीसेट लिंक भेजेंगे। अपना पासवर्ड रीसेट करने के लिए ईमेल में दिए गए निर्देशों का पालन करें।</span>
+                        </div>
+                      </div>
+                      
+                      <div class="border border-gray-200 rounded-md overflow-hidden">
+                        <button class="faq-toggle w-full flex justify-between items-center p-4 bg-gray-50 text-left font-medium hover:bg-gray-100 transition-colors">
+                          <span>
+                            <span class="en">Can I apply for multiple positions at the same time?</span>
+                            <span class="hi hidden">क्या मैं एक ही समय में कई पदों के लिए आवेदन कर सकता हूं?</span>
+                          </span>
+                          <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-content hidden p-4 text-gray-600 text-sm">
+                          <span class="en">Yes, you can apply for multiple positions if you meet the eligibility criteria for each position. However, you will need to submit separate applications for each position and pay the application fee (if applicable) for each application.</span>
+                          <span class="hi hidden">हां, यदि आप प्रत्येक पद के लिए पात्रता मानदंडों को पूरा करते हैं तो आप कई पदों के लिए आवेदन कर सकते हैं। हालांकि, आपको प्रत्येक पद के लिए अलग-अलग आवेदन जमा करने होंगे और प्रत्येक आवेदन के लिए आवेदन शुल्क (यदि लागू हो) का भुगतान करना होगा।</span>
+                        </div>
+                      </div>
+                      
+                      <div class="border border-gray-200 rounded-md overflow-hidden">
+                        <button class="faq-toggle w-full flex justify-between items-center p-4 bg-gray-50 text-left font-medium hover:bg-gray-100 transition-colors">
+                          <span>
+                            <span class="en">How will I know if my application is accepted?</span>
+                            <span class="hi hidden">मुझे कैसे पता चलेगा कि मेरा आवेदन स्वीकार कर लिया गया है?</span>
+                          </span>
+                          <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="faq-content hidden p-4 text-gray-600 text-sm">
+                          <span class="en">Once your application is successfully submitted, you will receive a confirmation email and SMS with your application number. You can also check the status of your application by logging into your account and visiting the "Application Status" section.</span>
+                          <span class="hi hidden">एक बार जब आपका आवेदन सफलतापूर्वक जमा हो जाता है, तो आपको अपने आवेदन संख्या के साथ एक पुष्टिकरण ईमेल और एसएमएस प्राप्त होगा। आप अपने खाते में लॉग इन करके और "आवेदन स्थिति" अनुभाग पर जाकर अपने आवेदन की स्थिति भी जांच सकते हैं।</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer py-8 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <h4 class="text-lg font-bold mb-4">
+            <span class="en">Indian Army</span>
+            <span class="hi hidden">भारतीय सेना</span>
+          </h4>
+          <p class="text-gray-300 text-sm">
+            <span class="en">Official Recruitment Portal of the Indian Army. Service to the nation with Honor, Duty and Courage.</span>
+            <span class="hi hidden">भारतीय सेना का आधिकारिक भर्ती पोर्टल। सम्मान, कर्तव्य और साहस के साथ राष्ट्र की सेवा।</span>
+          </p>
+          
+          <div class="mt-4 font-size-controls flex items-center">
+            <span class="text-sm mr-2 text-gray-300">
+              <span class="en">Text Size:</span>
+              <span class="hi hidden">टेक्स्ट साइज़:</span>
+            </span>
+            <button class="font-size-decrease">A-</button>
+            <button class="font-size-reset mx-1">A</button>
+            <button class="font-size-increase">A+</button>
+          </div>
+          
+          <div class="mt-3">
+            <button id="text-to-speech" class="text-white bg-green-700 hover:bg-green-800 px-3 py-1 rounded text-sm flex items-center">
+              <i class="fas fa-volume-up mr-2"></i>
+              <span class="en">Text to Speech</span>
+              <span class="hi hidden">टेक्स्ट टू स्पीच</span>
+            </button>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-bold mb-4">
+            <span class="en">Quick Links</span>
+            <span class="hi hidden">त्वरित लिंक</span>
+          </h4>
+          <ul class="space-y-2 text-gray-300">
+            <li>
+              <a href=about.html class="hover:text-white">
+                <span class="en">About Indian Army</span>
+                <span class="hi hidden">भारतीय सेना के बारे में</span>
+              </a>
+            </li>
+            <li>
+              <a href=contact.html class="hover:text-white">
+                <span class="en">Contact us </span>
+                <span class="hi hidden">करियर के अवसर</span>
+              </a>
+            </li>
+           
+            <li>
+              <a href="javascript:void(0)" class="hover:text-white">
+                <span class="en">Press Releases</span>
+                <span class="hi hidden">प्रेस विज्ञप्ति</span>
+              </a>
+            </li>
+            <li>
+              <a href="javascript:void(0)" class="hover:text-white">
+                <span class="en">Photo Gallery</span>
+                <span class="hi hidden">फोटो गैलरी</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-bold mb-4">
+            <span class="en">Important Links</span>
+            <span class="hi hidden">महत्वपूर्ण लिंक</span>
+          </h4>
+          <ul class="space-y-2 text-gray-300">
+            <li>
+              <a href= https://mod.gov.in class="hover:text-white">
+                <span class="en">Ministry of Defence</span>
+                <span class="hi hidden">रक्षा मंत्रालय</span>
+              </a>
+            </li>
+            <li>
+              <a href= https://indianairforce.nic.in class="hover:text-white">
+                <span class="en">Indian Air Force</span>
+                <span class="hi hidden">भारतीय वायु सेना</span>
+              </a>
+            </li>
+            <li>
+              <a href=https://www.joinindiannavy.gov.in class="hover:text-white">
+                <span class="en">Indian Navy</span>
+                <span class="hi hidden">भारतीय नौसेना</span>
+              </a>
+            </li>
+            <li>
+              <a href=https://indiancc.mygov.in class="hover:text-white">
+                <span class="en">National Cadet Corps</span>
+                <span class="hi hidden">राष्ट्रीय कैडेट कोर</span>
+              </a>
+            </li>
+            <li>
+              <a href= https://mod.gov.in/dod/Training-Institutions  class="hover:text-white">
+                <span class="en">Indian Military Academy</span>
+                <span class="hi hidden">भारतीय सैन्य अकादमी</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-bold mb-4">
+            <span class="en">Connect With Us</span>
+            <span class="hi hidden">हमसे जुड़ें</span>
+          </h4>
+          <div class="flex space-x-4 mb-4">
+            <a href=https://www.facebook.com/Indianarmy.adgpi/ class="text-white hover:text-gray-300">
+              <i class="fab fa-facebook-f text-xl"></i>
+            </a>
+            <a href=https://x.com/adgpi class="text-white hover:text-gray-300">
+              <i class="fab fa-twitter text-xl"></i>
+            </a>
+            <a href=https://www.instagram.com/indianarmy.adgpi/     
+
+
+class="text-white hover:text-gray-300">
+              <i class="fab fa-instagram text-xl"></i>
+            </a>
+            <a href=https://www.youtube.com/channel/UCvfH3RaugUbIqY-80iOED4Q class="text-white hover:text-gray-300">
+              <i class="fab fa-youtube text-xl"></i>
+            </a>
+          </div>
+          
+          <div class="mt-4">
+            <h5 class="font-medium text-white mb-2">
+              <span class="en">Download Our Mobile App</span>
+              <span class="hi hidden">हमारा मोबाइल ऐप डाउनलोड करें</span>
+            </h5>
+            <div class="flex space-x-3">
+              <a href="javascript:void(0)" class="text-white hover:text-gray-300">
+                <i class="fab fa-android text-2xl"></i>
+              </a>
+              <a href="javascript:void(0)" class="text-white hover:text-gray-300">
+                <i class="fab fa-apple text-2xl"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <hr class="border-gray-700 my-6">
+      
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="text-gray-400 text-sm mb-4 md:mb-0">
+          <span class="en">&copy; 2025 Indian Army. All rights reserved.</span>
+          <span class="hi hidden">&copy; 2025 भारतीय सेना। सर्वाधिकार सुरक्षित।</span>
+        </div>
+        
+        <div class="flex space-x-6 text-sm text-gray-400">
+          <a href="javascript:void(0)" class="hover:text-white">
+            <span class="en">Terms of Service</span>
+            <span class="hi hidden">सेवा की शर्तें</span>
+          </a>
+          <a href=privacy.html class="hover:text-white">
+            <span class="en">Privacy Policy</span>
+            <span class="hi hidden">गोपनीयता नीति</span>
+          </a>
+          <a href=privacy.html class="hover:text-white">
+            <span class="en">Disclaimer</span>
+            <span class="hi hidden">अस्वीकरण</span>
+          </a>
+          <a href class="hover:text-white">
+            <span class="en">Sitemap</span>
+            <span class="hi hidden">साइटमैप</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+  
+  <script id="app-script">
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize notifications
+      const notyf = new Notyf({
+        duration: 3000,
+        position: { x: 'right', y: 'top' },
+        types: [
+          {
+            type: 'success',
+            background: '#1a4d2e',
+            icon: {
+              className: 'fas fa-check-circle',
+              tagName: 'i'
+            }
+          },
+          {
+            type: 'error',
+            background: '#B91C1C',
+            icon: {
+              className: 'fas fa-times-circle',
+              tagName: 'i'
+            }
+          }
+        ]
+      });
+      
+      // Mobile menu toggle
+      const menuToggleBtn = document.getElementById('menu-toggle');
+      const menu = document.getElementById('menu');
+      
+      menuToggleBtn.addEventListener('click', function() {
+        menu.classList.toggle('hidden');
+      });
+      
+      // Language toggle
+      const languageToggle = document.getElementById('language-toggle');
+      const enElements = document.querySelectorAll('.en');
+      const hiElements = document.querySelectorAll('.hi');
+      
+      languageToggle.addEventListener('change', function() {
+        if (this.checked) {
+          enElements.forEach(el => el.classList.add('hidden'));
+          hiElements.forEach(el => el.classList.remove('hidden'));
+          document.documentElement.classList.add('rtl');
+        } else {
+          enElements.forEach(el => el.classList.remove('hidden'));
+          hiElements.forEach(el => el.classList.add('hidden'));
+          document.documentElement.classList.remove('rtl');
+        }
+      });
+      
+      // Font size controls
+      const fontSizeDecrease = document.querySelector('.font-size-decrease');
+      const fontSizeReset = document.querySelector('.font-size-reset');
+      const fontSizeIncrease = document.querySelector('.font-size-increase');
+      
+      let currentFontSize = 1; // 1 is the default multiplier
+      
+      fontSizeDecrease.addEventListener('click', function() {
+        if (currentFontSize > 0.8) {
+          currentFontSize -= 0.1;
+          document.body.style.fontSize = currentFontSize + 'em';
+        }
+      });
+      
+      fontSizeReset.addEventListener('click', function() {
+        currentFontSize = 1;
+        document.body.style.fontSize = currentFontSize + 'em';
+      });
+      
+      fontSizeIncrease.addEventListener('click', function() {
+        if (currentFontSize < 1.5) {
+          currentFontSize += 0.1;
+          document.body.style.fontSize = currentFontSize + 'em';
+        }
+      });
+      
+      // Text to speech functionality
+      const textToSpeechBtn = document.getElementById('text-to-speech');
+      let speechSynthesis = window.speechSynthesis;
+      let speaking = false;
+      
+      textToSpeechBtn.addEventListener('click', function() {
+        if (speaking) {
+          speechSynthesis.cancel();
+          speaking = false;
+          textToSpeechBtn.innerHTML = `<i class="fas fa-volume-up mr-2"></i> 
+            <span class="en">Text to Speech</span>
+            <span class="hi hidden">टेक्स्ट टू स्पीच</span>`;
+        } else {
+          const activeSection = document.querySelector('.section-content:not(.hidden-section)');
+          const textToRead = activeSection.textContent.trim();
+          
+          const utterance = new SpeechSynthesisUtterance(textToRead);
+          utterance.lang = languageToggle.checked ? 'hi-IN' : 'en-US';
+          utterance.onend = function() {
+            speaking = false;
+            textToSpeechBtn.innerHTML = `<i class="fas fa-volume-up mr-2"></i> 
+              <span class="en">Text to Speech</span>
+              <span class="hi hidden">टेक्स्ट टू स्पीच</span>`;
+          };
+          
+          speaking = true;
+          textToSpeechBtn.innerHTML = `<i class="fas fa-stop-circle mr-2"></i> 
+            <span class="en">Stop</span>
+            <span class="hi hidden">रोकें</span>`;
+          speechSynthesis.speak(utterance);
+        }
+      });
+      
+      // Section navigation
+      const navItems = document.querySelectorAll('.nav-item');
+      const sections = document.querySelectorAll('.section-content');
+      const navLinks = document.querySelectorAll('.nav-link');
+      
+      navItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const sectionId = this.getAttribute('data-section');
+          
+          // Hide all sections
+          sections.forEach(section => {
+            section.classList.add('hidden-section');
+          });
+          
+          // Show the selected section
+          document.getElementById(sectionId).classList.remove('hidden-section');
+          
+          // Update active nav link
+          navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('data-section') === sectionId) {
+              link.classList.add('active');
+            }
+          });
+          
+          // Close mobile menu on navigation
+          if (window.innerWidth < 1024) {
+            menu.classList.add('hidden');
+          }
+          
+          // Scroll to top
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      });
+      
+      // Document upload click handlers
+      const uploadAreas = document.querySelectorAll('.upload-area');
+      
+      uploadAreas.forEach(area => {
+        const inputFile = area.querySelector('input[type="file"]');
+        
+        area.addEventListener('click', () => {
+          inputFile.click();
+        });
+        
+        inputFile.addEventListener('change', (e) => {
+          if (e.target.files.length > 0) {
+            const fileName = e.target.files[0].name;
+            area.innerHTML = `<i class="fas fa-check-circle text-3xl text-green-500 mb-2"></i>
+                             <p class="mb-2">${fileName}</p>
+                             <p class="text-xs text-gray-500">
+                              <span class="en">File uploaded successfully</span>
+                              <span class="hi hidden">फ़ाइल सफलतापूर्वक अपलोड की गई</span>
+                             </p>`;
+          }
+        });
+        
+        // Drag and drop functionality
+        area.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          area.classList.add('border-primary');
+        });
+        
+        area.addEventListener('dragleave', () => {
+          area.classList.remove('border-primary');
+        });
+        
+        area.addEventListener('drop', (e) => {
+          e.preventDefault();
+          area.classList.remove('border-primary');
+          
+          if (e.dataTransfer.files.length > 0) {
+            inputFile.files = e.dataTransfer.files;
+            const fileName = e.dataTransfer.files[0].name;
+            area.innerHTML = `<i class="fas fa-check-circle text-3xl text-green-500 mb-2"></i>
+                             <p class="mb-2">${fileName}</p>
+                             <p class="text-xs text-gray-500">
+                              <span class="en">File uploaded successfully</span>
+                              <span class="hi hidden">फ़ाइल सफलतापूर्वक अपलोड की गई</span>
+                             </p>`;
+          }
+        });
+      });
+      
+      // FAQ toggles
+      const faqToggles = document.querySelectorAll('.faq-toggle');
+      
+      faqToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+          const content = this.nextElementSibling;
+          content.classList.toggle('hidden');
+          
+          const icon = this.querySelector('i');
+          if (content.classList.contains('hidden')) {
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+          } else {
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+          }
+        });
+      });
+      
+      // Form validation and submission
+      
+      // Registration form
+      const registrationForm = document.getElementById('registration-form');
+      if (registrationForm) {
+        registrationForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Basic validation example
+          const fullname = document.getElementById('fullname').value;
+          const email = document.getElementById('email').value;
+          const mobile = document.getElementById('mobile').value;
+          const password = document.getElementById('password').value;
+          const confirmPassword = document.getElementById('confirm-password').value;
+          
+          // Validation
+          let isValid = true;
+          const fullnameError = document.getElementById('fullname-error');
+          const emailError = document.getElementById('email-error');
+          const mobileError = document.getElementById('mobile-error');
+          const passwordError = document.getElementById('password-error');
+          const confirmPasswordError = document.getElementById('confirm-password-error');
+          
+          // Reset error messages
+          fullnameError.classList.add('hidden');
+          emailError.classList.add('hidden');
+          mobileError.classList.add('hidden');
+          passwordError.classList.add('hidden');
+          confirmPasswordError.classList.add('hidden');
+          
+          if (!fullname) {
+            fullnameError.textContent = "Full name is required";
+            fullnameError.classList.remove('hidden');
+            isValid = false;
+          }
+          
+          if (!email || !email.includes('@')) {
+            emailError.textContent = "Valid email is required";
+            emailError.classList.remove('hidden');
+            isValid = false;
+          }
+          
+          if (!mobile || mobile.length !== 10) {
+            mobileError.textContent = "Valid 10-digit mobile number is required";
+            mobileError.classList.remove('hidden');
+            isValid = false;
+          }
+          
+          if (!password || password.length < 8) {
+            passwordError.textContent = "Password must be at least 8 characters";
+            passwordError.classList.remove('hidden');
+            isValid = false;
+          }
+          
+          if (password !== confirmPassword) {
+            confirmPasswordError.textContent = "Passwords do not match";
+            confirmPasswordError.classList.remove('hidden');
+            isValid = false;
+          }
+          
+          if (isValid) {
+            // Simulate API call
+            setTimeout(() => {
+              // Store in localStorage
+              const userData = {
+                fullname,
+                email,
+                mobile,
+                // Never store passwords in localStorage in a real app!
+                // This is just for the prototype
+                isRegistered: true
+              };
+              
+              localStorage.setItem('armyRecruitUser', JSON.stringify(userData));
+              
+              // Show success message
+              Swal.fire({
+                title: languageToggle.checked ? 'पंजीकरण सफल!' : 'Registration Successful!',
+                text: languageToggle.checked ? 'आपका खाता सफलतापूर्वक बनाया गया है। सत्यापन के लिए आपके मोबाइल पर एक OTP भेजा गया है।' : 'Your account has been successfully created. An OTP has been sent to your mobile for verification.',
+                icon: 'success',
+                confirmButtonText: languageToggle.checked ? 'जारी रखें' : 'Continue',
+                confirmButtonColor: '#1a4d2e'
+              }).then(() => {
+                // Show OTP verification dialog
+                Swal.fire({
+                  title: languageToggle.checked ? 'OTP सत्यापन' : 'OTP Verification',
+                  input: 'text',
+                  inputAttributes: {
+                    autocapitalize: 'off',
+                    maxlength: 6,
+                    placeholder: languageToggle.checked ? 'अपना 6-अंकों का OTP दर्ज करें' : 'Enter your 6-digit OTP'
+                  },
+                  showCancelButton: true,
+                  confirmButtonText: languageToggle.checked ? 'सत्यापित करें' : 'Verify',
+                  confirmButtonColor: '#1a4d2e',
+                  cancelButtonText: languageToggle.checked ? 'बाद में' : 'Later',
+                  showLoaderOnConfirm: true,
+                  preConfirm: (otp) => {
+                    return new Promise((resolve) => {
+                      setTimeout(() => {
+                        if (otp === '123456') { // Mock OTP for prototype
+                          resolve(true);
+                        } else {
+                          Swal.showValidationMessage(
+                            languageToggle.checked ? 'अमान्य OTP। कृपया पुन: प्रयास करें।' : 'Invalid OTP. Please try again.'
+                          );
+                          resolve(false);
+                        }
+                      }, 1000);
+                    });
+                  },
+                  allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    Swal.fire({
+                      title: languageToggle.checked ? 'सत्यापन पूर्ण!' : 'Verification Complete!',
+                      text: languageToggle.checked ? 'आपकी पंजीकरण प्रक्रिया पूरी हो गई है। आप अब आगे बढ़ सकते हैं।' : 'Your registration process is complete. You can now proceed.',
+                      icon: 'success',
+                      confirmButtonText: languageToggle.checked ? 'शुरू करें' : 'Get Started',
+                      confirmButtonColor: '#1a4d2e'
+                    });
+                  }
+                });
+              });
+              
+              // Reset form
+              registrationForm.reset();
+              
+            }, 1500);
+          }
+        });
+      }
+      
+      // Eligibility form
+      const eligibilityForm = document.getElementById('eligibility-form');
+      if (eligibilityForm) {
+        eligibilityForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const position = document.getElementById('position').value;
+          const age = document.getElementById('age').value;
+          const education = document.getElementById('education').value;
+          const height = document.getElementById('height').value;
+          
+          // Mock eligibility check logic
+          let isEligible = true;
+          let message = '';
+          
+          if (position === 'officer' && (age < 19 || age > 25)) {
+            isEligible = false;
+            message = languageToggle.checked ? 
+              'अधिकारी प्रवेश के लिए, आयु 19-25 वर्ष के बीच होनी चाहिए।' : 
+              'For Officer entry, age must be between 19-25 years.';
+          }
+          
+          if (position === 'soldier' && height < 168) {
+            isEligible = false;
+            message = languageToggle.checked ? 
+              'सैनिक (सामान्य ड्यूटी) के लिए, न्यूनतम ऊंचाई 168 सेमी होनी चाहिए।' : 
+              'For Soldier (General Duty), minimum height should be 168 cm.';
+          }
+          
+          if (position === 'technical' && education !== 'diploma' && education !== 'graduate') {
+            isEligible = false;
+            message = languageToggle.checked ? 
+              'सैनिक (तकनीकी) के लिए, न्यूनतम योग्यता डिप्लोमा या स्नातक होनी चाहिए।' : 
+              'For Soldier (Technical), minimum qualification should be Diploma or Graduate.';
+          }
+          
+          setTimeout(() => {
+            if (isEligible) {
+              Swal.fire({
+                title: languageToggle.checked ? 'बधाई हो!' : 'Congratulations!',
+                text: languageToggle.checked ? 
+                  'आप इस पद के लिए पात्र हैं। आप आवेदन प्रक्रिया के साथ आगे बढ़ सकते हैं।' : 
+                  'You are eligible for this position. You may proceed with the application process.',
+                icon: 'success',
+                confirmButtonText: languageToggle.checked ? 'आवेदन करें' : 'Apply Now',
+                confirmButtonColor: '#1a4d2e'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  // Navigate to registration
+                  const registrationNavItem = document.querySelector('.nav-item[data-section="registration"]');
+                  if (registrationNavItem) {
+                    registrationNavItem.click();
+                  }
+                }
+              });
+            } else {
+              Swal.fire({
+                title: languageToggle.checked ? 'आप पात्र नहीं हैं' : 'You are not eligible',
+                text: message,
+                icon: 'error',
+                confirmButtonText: languageToggle.checked ? 'समझा' : 'Understood',
+                confirmButtonColor: '#1a4d2e'
+              });
+            }
+          }, 1000);
+        });
+      }
+      
+      // Document upload form
+      const documentUploadForm = document.getElementById('document-upload-form');
+      if (documentUploadForm) {
+        documentUploadForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Count the number of mandatory files that have been uploaded
+          const requiredInputs = this.querySelectorAll('input[required]');
+          let uploadedCount = 0;
+          
+          requiredInputs.forEach(input => {
+            if (input.files && input.files.length > 0) {
+              uploadedCount++;
+            }
+          });
+          
+          if (uploadedCount < requiredInputs.length) {
+            notyf.error(languageToggle.checked ? 
+              'कृपया सभी आवश्यक दस्तावेज़ अपलोड करें।' : 
+              'Please upload all required documents.');
+            return;
+          }
+          
+          // Simulate upload
+          Swal.fire({
+            title: languageToggle.checked ? 'दस्तावेज़ अपलोड हो रहे हैं' : 'Uploading Documents',
+            html: languageToggle.checked ? 'कृपया प्रतीक्षा करें...' : 'Please wait...',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+          });
+          
+          setTimeout(() => {
+            Swal.close();
+            
+            Swal.fire({
+              title: languageToggle.checked ? 'दस्तावेज़ अपलोड सफल!' : 'Documents Uploaded Successfully!',
+              text: languageToggle.checked ? 
+                'आपके सभी दस्तावेज़ सफलतापूर्वक अपलोड किए गए हैं। हम सत्यापन के बाद आपसे संपर्क करेंगे।' : 
+                'All your documents have been successfully uploaded. We will contact you after verification.',
+              icon: 'success',
+              confirmButtonText: languageToggle.checked ? 'जारी रखें' : 'Continue',
+              confirmButtonColor: '#1a4d2e'
+            });
+            
+            // Reset form
+            documentUploadForm.reset();
+            
+            // Reset upload areas
+            uploadAreas.forEach(area => {
+              area.innerHTML = `<i class="fas fa-file-alt text-3xl text-gray-400 mb-2"></i>
+                               <p class="mb-2">
+                                <span class="en">Click or drag to upload</span>
+                                <span class="hi hidden">अपलोड करने के लिए क्लिक करें या खींचें</span>
+                               </p>
+                               <p class="text-xs text-gray-500">
+                                <span class="en">JPG/PNG/PDF format</span>
+                                <span class="hi hidden">JPG/PNG/PDF प्रारूप</span>
+                               </p>`;
+            });
+            
+          }, 2000);
+        });
+      }
+      
+      // Results form
+      const resultsForm = document.getElementById('results-form');
+      if (resultsForm) {
+        resultsForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const exam = document.getElementById('result-exam').value;
+          const rollNumber = document.getElementById('roll-number').value;
+          
+          // Simulate API call
+          Swal.fire({
+            title: languageToggle.checked ? 'परिणाम फ़ेच किए जा रहे हैं' : 'Fetching Results',
+            html: languageToggle.checked ? 'कृपया प्रतीक्षा करें...' : 'Please wait...',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+          });
+          
+          setTimeout(() => {
+            Swal.close();
+            
+            // Mock result data
+            if (rollNumber === '12345678') {
+              Swal.fire({
+                title: languageToggle.checked ? 'परिणाम मिला!' : 'Result Found!',
+                html: `
+                  <div class="text-left p-4 border border-gray-200 rounded-lg bg-green-50 mb-4">
+                    <h3 class="font-bold text-center text-xl mb-3">${languageToggle.checked ? 'परिणाम विवरण' : 'Result Details'}</h3>
+                    <p><strong>${languageToggle.checked ? 'नाम:' : 'Name:'}</strong> Rahul Kumar</p>
+                    <p><strong>${languageToggle.checked ? 'रोल नंबर:' : 'Roll Number:'}</strong> 12345678</p>
+                    <p><strong>${languageToggle.checked ? 'परीक्षा:' : 'Examination:'}</strong> ${exam}</p>
+                    <p><strong>${languageToggle.checked ? 'स्थिति:' : 'Status:'}</strong> <span class="text-green-600 font-bold">${languageToggle.checked ? 'उत्तीर्ण' : 'QUALIFIED'}</span></p>
+                    <p><strong>${languageToggle.checked ? 'अंक:' : 'Marks:'}</strong> 385/500</p>
+                    <p><strong>${languageToggle.checked ? 'अगला कदम:' : 'Next Step:'}</strong> ${languageToggle.checked ? 'चिकित्सा परीक्षण - 15 जून, 2025' : 'Medical Examination - June 15, 2025'}</p>
+                  </div>
+                `,
+                confirmButtonText: languageToggle.checked ? 'बंद करें' : 'Close',
+                confirmButtonColor: '#1a4d2e',
+                footer: `<a href="javascript:void(0)" class="text-blue-600 hover:underline">${languageToggle.checked ? 'विस्तृत परिणाम डाउनलोड करें' : 'Download Detailed Result'}</a>`
+              });
+            } else {
+              Swal.fire({
+                title: languageToggle.checked ? 'परिणाम नहीं मिला' : 'Result Not Found',
+                text: languageToggle.checked ? 
+                  'दिए गए विवरण के साथ कोई परिणाम नहीं मिला। कृपया जांचें और पुनः प्रयास करें।' : 
+                  'No result found with the given details. Please check and try again.',
+                icon: 'error',
+                confirmButtonText: languageToggle.checked ? 'पुनः प्रयास करें' : 'Try Again',
+                confirmButtonColor: '#1a4d2e'
+              });
+            }
+          }, 1500);
+        });
+      }
+      
+      // Support form
+      const supportForm = document.getElementById('support-form');
+      if (supportForm) {
+        supportForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Simulate API call
+          Swal.fire({
+            title: languageToggle.checked ? 'अनुरोध सबमिट किया जा रहा है' : 'Submitting Request',
+            html: languageToggle.checked ? 'कृपया प्रतीक्षा करें...' : 'Please wait...',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+          });
+          
+          setTimeout(() => {
+            Swal.close();
+            
+            Swal.fire({
+              title: languageToggle.checked ? 'अनुरोध सबमिट किया गया!' : 'Request Submitted!',
+              text: languageToggle.checked ? 
+                'आपका सहायता अनुरोध सफलतापूर्वक सबमिट कर दिया गया है। हमारी टीम जल्द ही आपसे संपर्क करेगी।' : 
+                'Your support request has been successfully submitted. Our team will contact you soon.',
+              icon: 'success',
+              confirmButtonText: languageToggle.checked ? 'धन्यवाद' : 'Thank You',
+              confirmButtonColor: '#1a4d2e'
+            });
+            
+            // Generate random ticket ID
+            const ticketId = 'ARMY' + Math.floor(100000 + Math.random() * 900000);
+            
+            notyf.success({
+              message: languageToggle.checked ? 
+                `टिकट आईडी ${ticketId} के साथ आपका अनुरोध दर्ज कर लिया गया है। इस आईडी का उपयोग आप अपने अनुरोध को ट्रैक करने के लिए कर सकते हैं।` : 
+                `Your request has been logged with Ticket ID ${ticketId}. You can use this ID to track your request.`,
+              duration: 6000
+            });
+            
+            // Reset form
+            supportForm.reset();
+          }, 1500);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
